@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>සිංහල හඬ පරීක්ෂාව</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f2;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 550px;
+      margin: 30px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 3px 12px #0002;
+    }
+
+    h2 {
+      color: #176b3a;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 9px;
+      background: #176b3a;
+      color: white;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #999;
+    }
+
+    #result {
+      min-height: 65px;
+      padding: 15px;
+      background: #f1f5f2;
+      border-radius: 8px;
+      font-size: 18px;
+      text-align: left;
+    }
+
+    #status {
+      color: #176b3a;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h2>සිංහල හඬ පරීක්ෂාව</h2>
+
+    <p>දහම් පාසල් ශිෂ්‍ය ලියාපදිංචි පද්ධතිය</p>
+
+    <button onclick="testVoice()">
+      🔊 සිංහල හඬ පරීක්ෂා කරන්න
+    </button>
+
+    <button onclick="startListening()">
+      🎤 කතා කිරීම ආරම්භ කරන්න
+    </button>
+
+    <button onclick="stopListening()">
+      ⏹️ නවත්වන්න
+    </button>
+
+    <h3>ඔබ පැවසූ වචන</h3>
+
+    <div id="result">
+      මෙතැන ඔබේ කතාව දිස්වේවි.
+    </div>
+
+    <p id="status">පරීක්ෂාවට සූදානම්.</p>
+
+  </div>
+
+  <script>
+    function testVoice() {
+      if (!("speechSynthesis" in window)) {
+        document.getElementById("status").textContent =
+          "මෙම බ්‍රවුසරයේ හඬ කියවීම පහසුකම නැහැ.";
+        return;
+      }
+
+      const voices = speechSynthesis.getVoices();
+
+      const sinhalaVoices = voices.filter(v =>
+        v.lang.toLowerCase().startsWith("si")
+      );
+
+      if (sinhalaVoices.length === 0) {
+        document.getElementById("status").textContent =
+          "සිංහල හඬක් පරිගණකයේ දැනට සොයාගත නොහැක.";
+        return;
+      }
+
+      const voice = sinhalaVoices.find(v =>
+        /female|woman|zira/i.test(v.name)
+      ) || sinhalaVoices[0];
+
+      const message = new SpeechSynthesisUtterance(
+        "ආයුබෝවන්! දහම් පාසල් ශිෂ්‍ය ලියාපදිංචි පද්ධතියට ඔබ සාදරයෙන් පිළිගනිමු."
+      );
+
+      message.lang = "si-LK";
+      message.voice = voice;
+      message.rate = 0.9;
+
+      speechSynthesis.cancel();
+      speechSynthesis.speak(message);
+
+      document.getElementById("status").textContent =
+        "හඬ පරීක්ෂා කරමින් පවතී: " + voice.name;
+    }
+
+    let recognition;
+
+    function startListening() {
+      const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        document.getElementById("status").textContent =
+          "මෙම බ්‍රවුසරයේ හඬ හඳුනාගැනීම පහසුකම නැහැ.";
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = "si-LK";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = function() {
+        document.getElementById("status").textContent =
+          "දැන් කතා කරන්න...";
+      };
+
+      recognition.onresult = function(event) {
+        const spokenText =
+          event.results[0][0].transcript;
+
+        document.getElementById("result").textContent =
+          spokenText;
+
+        document.getElementById("status").textContent =
+          "ඔබේ කතාව හඳුනාගත්තා.";
+      };
+
+      recognition.onerror = function(event) {
+        document.getElementById("status").textContent =
+          "දෝෂයක්: " + event.error;
+      };
+
+      recognition.onend = function() {
+        document.getElementById("status").textContent +=
+          " පරීක්ෂාව අවසන්.";
+      };
+
+      try {
+        recognition.start();
+      } catch (error) {
+        document.getElementById("status").textContent =
+          "මයික්‍රෆෝනය ආරම්භ කිරීමේ දෝෂයක්.";
+      }
+    }
+
+    function stopListening() {
+      if (recognition) {
+        recognition.stop();
+      }
+    }
+  </script>
+
+</body>
+</html>
