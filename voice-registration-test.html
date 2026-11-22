@@ -130,6 +130,7 @@ const statusBox = document.getElementById("status");
 const micButton = document.getElementById("micButton");
 const nextButton = document.getElementById("nextButton");
 
+
 function showQuestion() {
   const q = questions[currentIndex];
 
@@ -144,33 +145,35 @@ function showQuestion() {
   if (q.name === "address" || q.name === "studentName") {
     field = document.createElement("textarea");
     field.rows = 3;
+
   } else {
     field = document.createElement("input");
-    field.type = "text";
+    field.type = q.name === "grade" ? "number" : "text";
   }
 
   field.id = "answer";
-  field.placeholder = "පිළිතුර මෙහි ඇතුළත් වේ";
+
+  if (q.name === "grade") {
+    field.min = "1";
+    field.max = "10";
+    field.step = "1";
+    field.placeholder = "ශ්‍රේණි අංකය පමණක් ඇතුළත් කරන්න (1–10)";
+    micButton.style.display = "none";
+  } else {
+    field.placeholder = "පිළිතුර මෙහි ඇතුළත් වේ";
+    micButton.style.display = "inline-block";
+  }
+
   field.value = answers[q.name] || "";
 
   answerArea.appendChild(field);
+
   nextButton.disabled = !field.value.trim();
+
+  field.addEventListener("input", function() {
+    nextButton.disabled = !field.value.trim();
+  });
 }
-
-function startListening() {
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  if (!SpeechRecognition) {
-    statusBox.textContent =
-      "මෙම බ්‍රවුසරයේ හඬ හඳුනාගැනීම සහාය නොදක්වයි.";
-    return;
-  }
-
-  if (recognition) {
-    recognition.abort();
-  }
 
   recognition = new SpeechRecognition();
   recognition.lang = "si-LK";
