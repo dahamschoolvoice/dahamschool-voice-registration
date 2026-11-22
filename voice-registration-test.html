@@ -242,6 +242,22 @@ function nextQuestion() {
       digits.slice(0, 3) + " " +
       digits.slice(3, 6) + " " +
       digits.slice(6);
+
+  } else if (q.name === "grade") {
+    const gradeNumber = Number(answer);
+
+    if (
+      !Number.isInteger(gradeNumber) ||
+      gradeNumber < 1 ||
+      gradeNumber > 10
+    ) {
+      statusBox.textContent =
+        "කරුණාකර 1 සිට 10 දක්වා ශ්‍රේණි අංකයක් පමණක් ඇතුළත් කරන්න.";
+      return;
+    }
+
+    answers[q.name] = gradeNumber + " ශ්‍රේණිය";
+
   } else {
     answers[q.name] = answer;
   }
