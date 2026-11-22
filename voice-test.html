@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>සිංහල හඬ පරීක්ෂාව</title>
+</head>
+<body style="font-family:Arial;text-align:center;padding:30px">
+
+  <h2>සිංහල හඬ පරීක්ෂාව</h2>
+
+  <button onclick="startListening()">
+    🎤 කතා කිරීම ආරම්භ කරන්න
+  </button>
+
+  <h3>ඔබ පැවසූ වචන</h3>
+
+  <div id="result" style="padding:20px;background:#eee;min-height:60px">
+    මෙතැන ඔබේ කතාව දිස්වේවි.
+  </div>
+
+  <p id="status">පරීක්ෂාවට සූදානම්.</p>
+
+  <script>
+    function startListening() {
+      const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        document.getElementById("status").textContent =
+          "මෙම බ්‍රවුසරයේ හඬ හඳුනාගැනීම නැහැ.";
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+
+      recognition.lang = "si-LK";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = function() {
+        document.getElementById("status").textContent =
+          "දැන් කතා කරන්න...";
+      };
+
+      recognition.onresult = function(event) {
+        document.getElementById("result").textContent =
+          event.results[0][0].transcript;
+      };
+
+      recognition.onerror = function(event) {
+        document.getElementById("status").textContent =
+          "දෝෂය: " + event.error;
+      };
+
+      recognition.onend = function() {
+        document.getElementById("status").textContent +=
+          " පරීක්ෂාව අවසන්.";
+      };
+
+      recognition.start();
+    }
+  </script>
+
+</body>
+</html>
