@@ -164,7 +164,7 @@ function startListening() {
       event.results[0][0].transcript;
 
     document.getElementById("answer").value =
-      spokenText;
+      spokenText.replace(/[a-z]/gi, letter => letter.toUpperCase());
 
     statusBox.textContent =
       "පිළිතුර ලබාගත්තා. අවශ්‍ය නම් නිවැරදි කරන්න.";
