@@ -184,15 +184,17 @@ function startListening() {
     "ඔබගේ කටහඬට සවන් දෙමින් පවතී...";
 
   recognition.onresult = function(event) {
-    const spokenText = event.results[0][0].transcript;
+    
+const spokenText = event.results[0][0].transcript;
 
-    const convertedText =
-      spokenText.replace(/[a-z]/gi, letter =>
-        letter.toUpperCase()
-      );
+const convertedText =
+  convertSinhalaDigits(spokenText).replace(
+    /[a-z]/gi,
+    letter => letter.toUpperCase()
+  );
 
-    document.getElementById("answer").value =
-      convertedText;
+document.getElementById("answer").value =
+  convertedText;
 
     nextButton.disabled = false;
 
