@@ -83,7 +83,6 @@ button:disabled {
 </div>
 
 <script>
-
 const questions = [
   { name: "father", text: "කරුණාකර පියාගේ නම කියන්න." },
   { name: "mother", text: "කරුණාකර මවගේ නම කියන්න." },
@@ -97,6 +96,7 @@ const questions = [
 
 let currentIndex = 0;
 let recognition;
+let answers = {};
 
 const questionBox = document.getElementById("question");
 const answerArea = document.getElementById("answerArea");
@@ -105,14 +105,12 @@ const micButton = document.getElementById("micButton");
 const nextButton = document.getElementById("nextButton");
 
 function showQuestion() {
-
   const q = questions[currentIndex];
 
   document.getElementById("progress").textContent =
     "ප්‍රශ්නය " + (currentIndex + 1) + " / 8";
 
   questionBox.textContent = q.text;
-
   answerArea.innerHTML = "";
 
   let field;
@@ -127,13 +125,13 @@ function showQuestion() {
 
   field.id = "answer";
   field.placeholder = "පිළිතුර මෙහි ඇතුළත් වේ";
-  answerArea.appendChild(field);
+  field.value = answers[q.name] || "";
 
-  nextButton.disabled = true;
+  answerArea.appendChild(field);
+  nextButton.disabled = !field.value.trim();
 }
 
 function startListening() {
-
   const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
@@ -156,30 +154,27 @@ function startListening() {
   micButton.disabled = true;
   nextButton.disabled = true;
 
-  statusBox.textContent = "ඔබගේ කටහඬට සවන් දෙමින් පවතී...";
+  statusBox.textContent =
+    "ඔබගේ කටහඬට සවන් දෙමින් පවතී...";
 
   recognition.onresult = function(event) {
+    const spokenText = event.results[0][0].transcript;
 
-    const spokenText =
-  event.results[0][0].transcript;
+    const convertedText =
+      spokenText.replace(/[a-z]/gi, letter =>
+        letter.toUpperCase()
+      );
 
-const convertedText =
-  spokenText.replace(/[a-z]/gi, letter => letter.toUpperCase());
+    document.getElementById("answer").value =
+      convertedText;
 
-console.log("Original speech:", spokenText);
-console.log("Converted speech:", convertedText);
-
-document.getElementById("answer").value =
-  convertedText;
+    nextButton.disabled = false;
 
     statusBox.textContent =
       "පිළිතුර ලබාගත්තා. අවශ්‍ය නම් නිවැරදි කරන්න.";
-
-    nextButton.disabled = false;
   };
 
   recognition.onerror = function(event) {
-
     statusBox.textContent =
       "හඬ හඳුනාගැනීමේ දෝෂය: " + event.error;
   };
@@ -192,37 +187,92 @@ document.getElementById("answer").value =
 }
 
 function nextQuestion() {
+  const field = document.getElementById("answer");
+  const answer = field.value.trim();
 
-  if (!document.getElementById("answer").value.trim()) {
+  if (!answer) {
     statusBox.textContent =
       "කරුණාකර පිළිතුර ලබාදෙන්න.";
     return;
   }
 
-  if (currentIndex < questions.length - 1) {
+  const q = questions[currentIndex];
 
+  if (q.name === "whatsapp") {
+    const digits = answer.replace(/\D/g, "");
+
+    if (digits.length !== 10) {
+      statusBox.textContent =
+        "දුරකථන අංකය ඉලක්කම් 10ක් විය යුතුයි. කරුණාකර නිවැරදි කරන්න.";
+      return;
+    }
+
+    answers[q.name] =
+      digits.slice(0, 3) + " " +
+      digits.slice(3, 6) + " " +
+      digits.slice(6);
+  } else {
+    answers[q.name] = answer;
+  }
+
+  if (currentIndex < questions.length - 1) {
     currentIndex++;
     showQuestion();
 
     statusBox.textContent =
       "ඊළඟ ප්‍රශ්නයට පිළිතුරු ලබාදෙන්න.";
-
   } else {
-
-    questionBox.textContent =
-      "ප්‍රශ්න අටම සම්පූර්ණයි!";
-
-    answerArea.innerHTML =
-      "<p>පරීක්ෂණය සාර්ථකව අවසන් කළා.</p>";
-
-    micButton.disabled = true;
-    nextButton.disabled = true;
-    statusBox.textContent = "පරීක්ෂණය අවසන්.";
+    showReview();
   }
 }
 
-showQuestion();
+function showReview() {
+  document.getElementById("progress").textContent =
+    "ලබාදුන් තොරතුරු පරීක්ෂා කරන්න";
 
+  questionBox.textContent =
+    "ඔබ මෙතෙක් ලබාදුන් තොරතුරු මුල සිට නැවත පරීක්ෂාකර බලා, අවශ්‍ය වන්නේ නම් සංශෝධන සිදුකර තොරතුරු නිවැරදි බව තහවුරු කරන්න.";
+
+  answerArea.innerHTML = "";
+
+  questions.forEach(function(q, index) {
+    const label = document.createElement("label");
+    label.textContent = (index + 1) + ". " + q.text;
+    label.style.display = "block";
+    label.style.textAlign = "left";
+    label.style.fontWeight = "bold";
+    label.style.marginTop = "15px";
+
+    let field;
+
+    if (q.name === "address" || q.name === "studentName") {
+      field = document.createElement("textarea");
+      field.rows = 3;
+    } else {
+      field = document.createElement("input");
+      field.type = "text";
+    }
+
+    field.value = answers[q.name] || "";
+    field.style.width = "95%";
+
+    field.addEventListener("input", function() {
+      answers[q.name] = field.value;
+    });
+
+    answerArea.appendChild(label);
+    answerArea.appendChild(field);
+  });
+
+  micButton.style.display = "none";
+  nextButton.style.display = "none";
+
+  statusBox.textContent =
+    "සියලු පිළිතුරු පරීක්ෂා කර අවශ්‍ය සංශෝධන සිදුකරන්න.";
+}
+
+showQuestion();
 </script>
+
 </body>
 </html>
