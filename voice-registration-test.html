@@ -297,14 +297,35 @@ function showReview() {
       field.rows = 3;
     } else {
       field = document.createElement("input");
-      field.type = "text";
+      field.type = q.name === "grade" ? "number" : "text";
     }
 
-    field.value = answers[q.name] || "";
+    if (q.name === "grade") {
+      field.min = "1";
+      field.max = "10";
+      field.step = "1";
+      field.placeholder = "ශ්‍රේණි අංකය පමණක් (1–10)";
+
+      field.value = (answers[q.name] || "")
+        .replace(" ශ්‍රේණිය", "");
+    } else {
+      field.value = answers[q.name] || "";
+    }
+
     field.style.width = "95%";
 
     field.addEventListener("input", function() {
-      answers[q.name] = field.value;
+      if (q.name === "grade") {
+        const n = Number(field.value);
+
+        answers[q.name] =
+          field.value.trim() === "" ? "" :
+          Number.isInteger(n) && n >= 1 && n <= 10
+            ? n + " ශ්‍රේණිය"
+            : field.value;
+      } else {
+        answers[q.name] = field.value;
+      }
     });
 
     answerArea.appendChild(label);
