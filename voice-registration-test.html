@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>දහම් පාසල් හඬ ලියාපදිංචි පරීක්ෂාව</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f5f2;
+  padding: 20px;
+  text-align: center;
+}
+.container {
+  max-width: 650px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+}
+h2 { color: #245c3b; }
+.question {
+  font-size: 22px;
+  margin: 25px 0;
+  color: #174b30;
+}
+input, textarea {
+  width: 95%;
+  padding: 12px;
+  margin: 8px 0 18px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 17px;
+}
+button {
+  padding: 13px 22px;
+  margin: 8px;
+  border: none;
+  border-radius: 7px;
+  background: #267344;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+}
+button:disabled {
+  background: #999;
+}
+#status {
+  margin: 18px;
+  color: #245c3b;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>දහම් පාසල් ශිෂ්‍ය ලියාපදිංචිය</h2>
+<p>හඬ මගින් තොරතුරු ලබාදීමේ පරීක්ෂණය</p>
+
+<div id="progress">ප්‍රශ්නය 1 / 8</div>
+
+<div class="question" id="question">
+කරුණාකර පියාගේ නම කියන්න.
+</div>
+
+<div id="answerArea"></div>
+
+<button id="micButton" onclick="startListening()">
+🎤 හඬින් පිළිතුරු දෙන්න
+</button>
+
+<button id="nextButton" onclick="nextQuestion()" disabled>
+ඊළඟ ප්‍රශ්නය
+</button>
+
+<div id="status">පරීක්ෂණය ආරම්භ කිරීමට මයික්‍රෆෝනය ඔබන්න.</div>
+
+</div>
+
+<script>
+
+const questions = [
+  { name: "father", text: "කරුණාකර පියාගේ නම කියන්න." },
+  { name: "mother", text: "කරුණාකර මවගේ නම කියන්න." },
+  { name: "address", text: "කරුණාකර ඔබගේ ලිපිනය කියන්න." },
+  { name: "whatsapp", text: "කරුණාකර WhatsApp දුරකථන අංකය කියන්න." },
+  { name: "studentName", text: "කරුණාකර දරුවාගේ සම්පූර්ණ නම කියන්න." },
+  { name: "school", text: "දරුවා ඉගෙනුම ලබන පාසල කියන්න." },
+  { name: "grade", text: "දරුවා ඉගෙනුම ලබන ශ්‍රේණිය කියන්න." },
+  { name: "dob", text: "කරුණාකර දරුවාගේ උපන් දිනය කියන්න." }
+];
+
+let currentIndex = 0;
+let recognition;
+
+const questionBox = document.getElementById("question");
+const answerArea = document.getElementById("answerArea");
+const statusBox = document.getElementById("status");
+const micButton = document.getElementById("micButton");
+const nextButton = document.getElementById("nextButton");
+
+function showQuestion() {
+
+  const q = questions[currentIndex];
+
+  document.getElementById("progress").textContent =
+    "ප්‍රශ්නය " + (currentIndex + 1) + " / 8";
+
+  questionBox.textContent = q.text;
+
+  answerArea.innerHTML = "";
+
+  let field;
+
+  if (q.name === "address" || q.name === "studentName") {
+    field = document.createElement("textarea");
+    field.rows = 3;
+  } else {
+    field = document.createElement("input");
+    field.type = "text";
+  }
+
+  field.id = "answer";
+  field.placeholder = "පිළිතුර මෙහි ඇතුළත් වේ";
+  answerArea.appendChild(field);
+
+  nextButton.disabled = true;
+}
+
+function startListening() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    statusBox.textContent =
+      "මෙම බ්‍රවුසරයේ හඬ හඳුනාගැනීම සහාය නොදක්වයි.";
+    return;
+  }
+
+  if (recognition) {
+    recognition.abort();
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = "si-LK";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  micButton.disabled = true;
+  nextButton.disabled = true;
+
+  statusBox.textContent = "ඔබගේ කටහඬට සවන් දෙමින් පවතී...";
+
+  recognition.onresult = function(event) {
+
+    const spokenText =
+      event.results[0][0].transcript;
+
+    document.getElementById("answer").value =
+      spokenText;
+
+    statusBox.textContent =
+      "පිළිතුර ලබාගත්තා. අවශ්‍ය නම් නිවැරදි කරන්න.";
+
+    nextButton.disabled = false;
+  };
+
+  recognition.onerror = function(event) {
+
+    statusBox.textContent =
+      "හඬ හඳුනාගැනීමේ දෝෂය: " + event.error;
+  };
+
+  recognition.onend = function() {
+    micButton.disabled = false;
+  };
+
+  recognition.start();
+}
+
+function nextQuestion() {
+
+  if (!document.getElementById("answer").value.trim()) {
+    statusBox.textContent =
+      "කරුණාකර පිළිතුර ලබාදෙන්න.";
+    return;
+  }
+
+  if (currentIndex < questions.length - 1) {
+
+    currentIndex++;
+    showQuestion();
+
+    statusBox.textContent =
+      "ඊළඟ ප්‍රශ්නයට පිළිතුරු ලබාදෙන්න.";
+
+  } else {
+
+    questionBox.textContent =
+      "ප්‍රශ්න අටම සම්පූර්ණයි!";
+
+    answerArea.innerHTML =
+      "<p>පරීක්ෂණය සාර්ථකව අවසන් කළා.</p>";
+
+    micButton.disabled = true;
+    nextButton.disabled = true;
+    statusBox.textContent = "පරීක්ෂණය අවසන්.";
+  }
+}
+
+showQuestion();
+
+</script>
+</body>
+</html>
