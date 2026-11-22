@@ -46,9 +46,11 @@
       };
 
       recognition.onresult = function(event) {
-        document.getElementById("result").textContent =
-          event.results[0][0].transcript;
-      };
+  const spokenText = event.results[0][0].transcript;
+
+  document.getElementById("result").textContent =
+    spokenText.replace(/[a-z]/gi, letter => letter.toUpperCase());
+};
 
       recognition.onerror = function(event) {
         document.getElementById("status").textContent =
