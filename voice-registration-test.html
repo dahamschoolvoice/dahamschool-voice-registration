@@ -162,6 +162,7 @@ function startListening() {
 
     const spokenText =
       event.results[0][0].transcript;
+    console.log("Original speech:", spokenText);
 
     document.getElementById("answer").value =
       spokenText.replace(/[a-z]/gi, letter => letter.toUpperCase());
