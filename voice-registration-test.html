@@ -161,11 +161,16 @@ function startListening() {
   recognition.onresult = function(event) {
 
     const spokenText =
-      event.results[0][0].transcript;
-    console.log("Original speech:", spokenText);
+  event.results[0][0].transcript;
 
-    document.getElementById("answer").value =
-      spokenText.replace(/[a-z]/gi, letter => letter.toUpperCase());
+const convertedText =
+  spokenText.replace(/[a-z]/gi, letter => letter.toUpperCase());
+
+console.log("Original speech:", spokenText);
+console.log("Converted speech:", convertedText);
+
+document.getElementById("answer").value =
+  convertedText;
 
     statusBox.textContent =
       "පිළිතුර ලබාගත්තා. අවශ්‍ය නම් නිවැරදි කරන්න.";
