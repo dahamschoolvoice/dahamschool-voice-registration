@@ -147,30 +147,40 @@
 
   </div>
 
-  <div id="successArea">
+  
+<div id="successArea">
 
-    <h3>ප්‍රශ්න තුන සාර්ථකයි!</h3>
-    
-    <p id="fatherResult"></p>
-    <p id="motherResult"></p>
-    <p id="addressResult"></p>
-    <p id="phoneResult"></p>
-    
-<p>
-  මූලික තොරතුරු ඇතුළත් කිරීම සාර්ථකයි. ස්තූතියි!
-</p>
+  <h3>ප්‍රශ්න අට සාර්ථකයි!</h3>
+
+  <p id="fatherResult"></p>
+  <p id="motherResult"></p>
+  <p id="addressResult"></p>
+  <p id="phoneResult"></p>
+  <p id="childNameResult"></p>
+  <p id="schoolResult"></p>
+  <p id="gradeResult"></p>
+  <p id="dobResult"></p>
+
+  <p>
+    මූලික තොරතුරු ඇතුළත් කිරීම සාර්ථකයි. ස්තූතියි!
+  </p>
 
 </div>
 
 </div>
+
 
 <script>
 
- const answers = {
+const answers = {
   fatherName: "",
   motherName: "",
   address: "",
-  phone: ""
+  phone: "",
+  childName: "",
+  school: "",
+  grade: "",
+  dob: ""
 };
 
 const questions = [
@@ -189,22 +199,40 @@ const questions = [
   {
     key: "phone",
     text: "ඔබගේ WhatsApp දුරකථන අංකය ඇතුළත් කරන්න."
+  },
+  {
+    key: "childName",
+    text: "දරුවාගේ සම්පූර්ණ නම පවසන්න."
+  },
+  {
+    key: "school",
+    text: "දරුවා දැනට ඉගෙනුම ලබන පාසලේ නම පවසන්න."
+  },
+  {
+    key: "grade",
+    text: "දරුවාගේ දහම් පාසල් ශ්‍රේණියේ ඉලක්කම ඇතුළත් කරන්න."
+  },
+  {
+    key: "dob",
+    text: "දරුවාගේ උපන් දිනය වර්ෂය / මාසය / දිනය ලෙස ඇතුළත් කරන්න."
   }
 ];
 
-  let currentQuestion = 0;
-  let recognition = null;
-  let isListening = false;
+let currentQuestion = 0;
+let recognition = null;
+let isListening = false;
 
-  function startRegistration() {
 
-    document.getElementById("welcomeArea").style.display = "none";
-    document.getElementById("questionArea").style.display = "block";
+function startRegistration() {
 
-    showQuestion();
+  document.getElementById("welcomeArea").style.display = "none";
+  document.getElementById("questionArea").style.display = "block";
 
-  }
-  
+  showQuestion();
+
+}
+
+
 function showQuestion() {
 
   const question = questions[currentQuestion];
@@ -216,14 +244,23 @@ function showQuestion() {
     question.text;
 
   const answerInput = document.getElementById("answer");
+
   const isPhone = question.key === "phone";
+  const isGrade = question.key === "grade";
+  const isDob = question.key === "dob";
+
+  const isKeyboard = isPhone || isGrade || isDob;
 
   answerInput.value = answers[question.key];
 
-  document.getElementById("recordButton").hidden = isPhone;
-  document.getElementById("stopButton").hidden = isPhone;
+  document.getElementById("recordButton").hidden = isKeyboard;
+  document.getElementById("stopButton").hidden = isKeyboard;
+
+  document.getElementById("recordButton").disabled = false;
+  document.getElementById("stopButton").disabled = true;
 
   if (isPhone) {
+
     answerInput.inputMode = "numeric";
     answerInput.maxLength = 12;
     answerInput.placeholder = "071 234 5678";
@@ -232,6 +269,7 @@ function showQuestion() {
       "ඉලක්කම් 10ක් ඇතුළත් කරන්න.";
 
     answerInput.oninput = function() {
+
       const digits = this.value.replace(/\D/g, "").slice(0, 10);
 
       let formatted = digits;
@@ -245,12 +283,59 @@ function showQuestion() {
       }
 
       this.value = formatted;
+
+    };
+
+  } else if (isGrade) {
+
+    answerInput.inputMode = "numeric";
+    answerInput.maxLength = 1;
+    answerInput.placeholder = "උදා: 5";
+
+    document.getElementById("status").textContent =
+      "ශ්‍රේණියේ ඉලක්කම පමණක් ඇතුළත් කරන්න.";
+
+    answerInput.oninput = function() {
+
+      this.value = this.value.replace(/\D/g, "").slice(0, 1);
+
+    };
+
+  } else if (isDob) {
+
+    answerInput.inputMode = "numeric";
+    answerInput.maxLength = 10;
+    answerInput.placeholder = "YYYY/MM/DD";
+
+    document.getElementById("status").textContent =
+      "උදා: 2015/08/25";
+
+    answerInput.oninput = function() {
+
+      const digits = this.value.replace(/\D/g, "").slice(0, 8);
+
+      let formatted = digits;
+
+      if (digits.length > 4) {
+        formatted = digits.slice(0, 4) + "/" + digits.slice(4);
+      }
+
+      if (digits.length > 6) {
+        formatted =
+          digits.slice(0, 4) + "/" +
+          digits.slice(4, 6) + "/" +
+          digits.slice(6);
+      }
+
+      this.value = formatted;
+
     };
 
   } else {
 
     answerInput.inputMode = "text";
     answerInput.maxLength = 500;
+
     answerInput.placeholder =
       "පිළිතුර මෙහි දිස්වේ. අවශ්‍ය නම් සංශෝධනය කරන්න.";
 
@@ -258,161 +343,217 @@ function showQuestion() {
 
     document.getElementById("status").textContent =
       "හඬ ලබාගැනීමට සූදානම්.";
+
   }
 
 }
 
-  function formatInitials(name) {
 
-    return name.replace(/^([a-z]+)/i, function(initials) {
-      return initials.toUpperCase();
-    });
+function startListening() {
 
-  }
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
-  function startListening() {
-
-    const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-
-      document.getElementById("status").textContent =
-        "මෙම බ්‍රවුසරය හඬ හඳුනාගැනීමට සහාය නොදක්වයි.";
-
-      return;
-    }
-
-    if (isListening) return;
-
-    recognition = new SpeechRecognition();
-
-    recognition.lang = "si-LK";
-    recognition.continuous = false;
-    recognition.interimResults = false;
+  if (!SpeechRecognition) {
 
     document.getElementById("status").textContent =
-      "දැන් ඔබගේ හඬට සවන් දෙමින් සිටී...";
-
-    document.getElementById("recordButton").disabled = true;
-    document.getElementById("stopButton").disabled = false;
-
-    isListening = true;
-
-    recognition.onresult = function(event) {
-
-      const transcript = event.results[0][0].transcript;
-
-      document.getElementById("answer").value = transcript;
-
-      document.getElementById("status").textContent =
-        "හඬ ලබාගැනීම සාර්ථකයි. පිළිතුර පරීක්ෂා කරන්න.";
-
-    };
-
-    recognition.onerror = function(event) {
-
-      document.getElementById("status").textContent =
-        "හඬ ලබාගැනීමේ දෝෂයක්: " + event.error;
-
-    };
-
-    recognition.onend = function() {
-
-      isListening = false;
-
-      document.getElementById("recordButton").disabled = false;
-      document.getElementById("stopButton").disabled = true;
-
-    };
-
-    try {
-
-      recognition.start();
-
-    } catch (error) {
-
-      isListening = false;
-
-      document.getElementById("recordButton").disabled = false;
-      document.getElementById("stopButton").disabled = true;
-
-      document.getElementById("status").textContent =
-        "නැවත උත්සාහ කරන්න.";
-
-    }
-
-  }
-
-  function stopListening() {
-
-    if (recognition && isListening) {
-      recognition.stop();
-    }
-
-  }
-
-  function confirmAnswer() {
-
-    if (isListening) {
-      stopListening();
-    }
-
-    const question = questions[currentQuestion];
-
-    const answer =
-  document.getElementById("answer").value.trim();
-
-    if (answer === "") {
-
-      alert("කරුණාකර පිළිතුර ඇතුළත් කරන්න.");
-
-      return;
-    }
-
-if (question.key === "phone") {
-
-  const phoneDigits = answer.replace(/\D/g, "");
-
-  if (phoneDigits.length !== 10) {
-
-    alert("කරුණාකර ඉලක්කම් 10ක දුරකථන අංකයක් ඇතුළත් කරන්න.");
+      "මෙම බ්‍රවුසරය හඬ හඳුනාගැනීමට සහාය නොදක්වයි.";
 
     return;
   }
 
+  if (isListening) return;
+
+  recognition = new SpeechRecognition();
+
+  recognition.lang = "si-LK";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  document.getElementById("status").textContent =
+    "දැන් ඔබගේ හඬට සවන් දෙමින් සිටී...";
+
+  document.getElementById("recordButton").disabled = true;
+  document.getElementById("stopButton").disabled = false;
+
+  isListening = true;
+
+  recognition.onresult = function(event) {
+
+    const transcript = event.results[0][0].transcript;
+
+    document.getElementById("answer").value = transcript;
+
+    document.getElementById("status").textContent =
+      "හඬ ලබාගැනීම සාර්ථකයි. පිළිතුර පරීක්ෂා කරන්න.";
+
+  };
+
+  recognition.onerror = function(event) {
+
+    document.getElementById("status").textContent =
+      "හඬ ලබාගැනීමේ දෝෂයක්: " + event.error;
+
+  };
+
+  recognition.onend = function() {
+
+    isListening = false;
+
+    document.getElementById("recordButton").disabled = false;
+    document.getElementById("stopButton").disabled = true;
+
+  };
+
+  try {
+
+    recognition.start();
+
+  } catch (error) {
+
+    isListening = false;
+
+    document.getElementById("recordButton").disabled = false;
+    document.getElementById("stopButton").disabled = true;
+
+    document.getElementById("status").textContent =
+      "නැවත උත්සාහ කරන්න.";
+
+  }
+
 }
 
-    answers[question.key] = answer;
 
-    currentQuestion++;
+function stopListening() {
 
-    if (currentQuestion < questions.length) {
+  if (recognition && isListening) {
+    recognition.stop();
+  }
 
-      showQuestion();
+}
 
-    } else {
 
-      document.getElementById("questionArea").style.display = "none";
-      document.getElementById("successArea").style.display = "block";
+function confirmAnswer() {
 
-      document.getElementById("fatherResult").textContent =
-        "පියාගේ නම: " + answers.fatherName;
+  if (isListening) {
+    stopListening();
+  }
 
-      document.getElementById("motherResult").textContent =
-        "මවගේ නම: " + answers.motherName;
-      
-      document.getElementById("addressResult").textContent =
-      "ලිපිනය: " + answers.address;
-      
-      document.getElementById("phoneResult").textContent =
-      "දුරකථන අංකය: " + answers.phone;
+  const question = questions[currentQuestion];
+
+  const answer =
+    document.getElementById("answer").value.trim();
+
+  if (answer === "") {
+
+    alert("කරුණාකර පිළිතුර ඇතුළත් කරන්න.");
+    return;
+
+  }
+
+
+  if (question.key === "phone") {
+
+    const phoneDigits = answer.replace(/\D/g, "");
+
+    if (phoneDigits.length !== 10) {
+
+      alert("කරුණාකර ඉලක්කම් 10ක දුරකථන අංකයක් ඇතුළත් කරන්න.");
+      return;
+
     }
 
   }
 
+
+  if (question.key === "grade") {
+
+    if (!/^[1-9]$/.test(answer)) {
+
+      alert("කරුණාකර 1 සිට 9 දක්වා ශ්‍රේණි අංකයක් ඇතුළත් කරන්න.");
+      return;
+
+    }
+
+  }
+
+
+  if (question.key === "dob") {
+
+    const dateMatch = answer.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
+
+    if (!dateMatch) {
+
+      alert("උපන් දිනය YYYY/MM/DD ආකෘතියට ඇතුළත් කරන්න.");
+      return;
+
+    }
+
+    const year = Number(dateMatch[1]);
+    const month = Number(dateMatch[2]);
+    const day = Number(dateMatch[3]);
+
+    const date = new Date(year, month - 1, day);
+
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day ||
+      year < 1900
+    ) {
+
+      alert("කරුණාකර නිවැරදි උපන් දිනයක් ඇතුළත් කරන්න.");
+      return;
+
+    }
+
+  }
+
+
+  answers[question.key] = answer;
+
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+
+    showQuestion();
+
+  } else {
+
+    document.getElementById("questionArea").style.display = "none";
+    document.getElementById("successArea").style.display = "block";
+
+    document.getElementById("fatherResult").textContent =
+      "පියාගේ නම: " + answers.fatherName;
+
+    document.getElementById("motherResult").textContent =
+      "මවගේ නම: " + answers.motherName;
+
+    document.getElementById("addressResult").textContent =
+      "ලිපිනය: " + answers.address;
+
+    document.getElementById("phoneResult").textContent =
+      "දුරකථන අංකය: " + answers.phone;
+
+    document.getElementById("childNameResult").textContent =
+      "දරුවාගේ නම: " + answers.childName;
+
+    document.getElementById("schoolResult").textContent =
+      "පාසල: " + answers.school;
+
+    document.getElementById("gradeResult").textContent =
+      "දහම් පාසල් ශ්‍රේණිය: " + answers.grade + " ශ්‍රේණිය";
+
+    document.getElementById("dobResult").textContent =
+      "උපන් දිනය: " + answers.dob;
+
+  }
+
+}
+
 </script>
+
 
 </body>
 </html>
