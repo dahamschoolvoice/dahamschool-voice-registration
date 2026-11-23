@@ -23,17 +23,10 @@
       box-shadow: 0 3px 12px #0002;
     }
 
-    h2 {
-      color: #176b3a;
-    }
+    h2 { color: #176b3a; }
+    h3 { color: #285b3b; }
 
-    h3 {
-      color: #285b3b;
-    }
-
-    p {
-      line-height: 1.8;
-    }
+    p { line-height: 1.8; }
 
     button {
       background: #176b3a;
@@ -46,10 +39,7 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: #10532c;
-    }
-
+    button:hover { background: #10532c; }
     button:disabled {
       background: #999;
       cursor: not-allowed;
@@ -77,8 +67,7 @@
       margin: 15px;
     }
 
-    #questionArea,
-    #successArea {
+    #questionArea, #successArea {
       display: none;
     }
   </style>
@@ -86,213 +75,266 @@
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h2>මුදුණකඩේ ශ්‍රී බෝධිරාජ දහම් පාසල</h2>
-    <h3>සිසු ලියාපදිංචිය</h3>
+  <h2>මුදුණකඩේ ශ්‍රී බෝධිරාජ දහම් පාසල</h2>
+  <h3>සිසු ලියාපදිංචිය</h3>
 
-    <div id="welcomeArea">
+  <div id="welcomeArea">
 
-      <p>
-        ආයුබෝවන්! මුදුණකඩේ ශ්‍රී බෝධිරාජ
-        දහම් පාසල් සිසුන් ලියාපදිංචි කිරීමේ
-        පද්ධතිය වෙත ඔබ සාදරයෙන් පිළිගනිමු.
-      </p>
+    <p>
+      ආයුබෝවන්! මුදුණකඩේ ශ්‍රී බෝධිරාජ
+      දහම් පාසල් සිසුන් ලියාපදිංචි කිරීමේ
+      පද්ධතිය වෙත ඔබ සාදරයෙන් පිළිගනිමු.
+    </p>
 
-      <p>
-        ඔබේ දරුවා දහම් පාසලේ ලියාපදිංචි කිරීම
-        සඳහා අපට අවශ්‍ය තොරතුරු දැන් ලබාදෙන්න.
-      </p>
+    <p>
+      ඔබේ දරුවා දහම් පාසලේ ලියාපදිංචි කිරීම
+      සඳහා අපට අවශ්‍ය තොරතුරු දැන් ලබාදෙන්න.
+    </p>
 
-      <button onclick="startRegistration()">
-        ලියාපදිංචිය ආරම්භ කරන්න
-      </button>
-
-    </div>
-
-    <div id="questionArea">
-
-      <h3>ප්‍රශ්නය 1 / 8</h3>
-
-      <p>
-        මුලකුරු සමඟ පියාගේ නම පවසන්න.
-      </p>
-
-      <p class="note">
-        පහත බොත්තම ඔබා පැහැදිලිව නම පවසන්න.
-      </p>
-
-      <button id="recordButton" onclick="startListening()">
-        🎤 හඬ මගින් නම පවසන්න
-      </button>
-
-      <button id="stopButton" onclick="stopListening()" disabled>
-        හඬ පටිගත කිරීම නවත්වන්න
-      </button>
-
-      <div id="status">
-        හඬ ලබාගැනීමට සූදානම්.
-      </div>
-
-      <p>ලබාගත් පිළිතුර:</p>
-
-      <textarea
-        id="fatherName"
-        placeholder="පියාගේ නම මෙහි දිස්වේ. අවශ්‍ය නම් සංශෝධනය කරන්න."
-      ></textarea>
-
-      <p class="note">
-        හඬ මගින් ලබාගත් නම නිවැරදි නොවේ නම්
-        මෙහි යතුරු පුවරුවෙන් සංශෝධනය කළ හැකිය.
-      </p>
-
-      <button onclick="confirmAnswer()">
-        පිළිතුර තහවුරු කරන්න
-      </button>
-
-    </div>
-
-    <div id="successArea">
-
-      <h3>පළමු ප්‍රශ්නය සාර්ථකයි!</h3>
-
-      <p id="confirmedName"></p>
-
-      <p>
-        පියාගේ නම තහවුරු කර ඇත.
-        ඊළඟට දෙවන ප්‍රශ්නය එකතු කරමු.
-      </p>
-
-    </div>
+    <button onclick="startRegistration()">
+      ලියාපදිංචිය ආරම්භ කරන්න
+    </button>
 
   </div>
 
-  <script>
+  <div id="questionArea">
 
-    let recognition;
-    let isListening = false;
+    <h3 id="questionNumber"></h3>
+    <p id="questionText"></p>
 
-    function startRegistration() {
+    <p class="note">
+      පහත බොත්තම ඔබා පැහැදිලිව පිළිතුර පවසන්න.
+    </p>
 
-      document.getElementById("welcomeArea").style.display = "none";
+    <button id="recordButton" onclick="startListening()">
+      🎤 හඬ මගින් පිළිතුර පවසන්න
+    </button>
 
-      document.getElementById("questionArea").style.display = "block";
+    <button id="stopButton" onclick="stopListening()" disabled>
+      හඬ පටිගත කිරීම නවත්වන්න
+    </button>
 
+    <div id="status">
+      හඬ ලබාගැනීමට සූදානම්.
+    </div>
+
+    <p>ලබාගත් පිළිතුර:</p>
+
+    <textarea id="answer"
+      placeholder="පිළිතුර මෙහි දිස්වේ. අවශ්‍ය නම් සංශෝධනය කරන්න.">
+    </textarea>
+
+    <p class="note">
+      පිළිතුර නිවැරදි නොවේ නම් මෙහි සංශෝධනය කළ හැකිය.
+    </p>
+
+    <button onclick="confirmAnswer()">
+      පිළිතුර තහවුරු කරන්න
+    </button>
+
+  </div>
+
+  <div id="successArea">
+
+    <h3>ප්‍රශ්න දෙක සාර්ථකයි!</h3>
+
+    <p id="fatherResult"></p>
+    <p id="motherResult"></p>
+
+    <p>
+      ඊළඟට තෙවන ප්‍රශ්නය එකතු කරමු.
+    </p>
+
+  </div>
+
+</div>
+
+<script>
+
+  const answers = {
+    fatherName: "",
+    motherName: ""
+  };
+
+  const questions = [
+    {
+      key: "fatherName",
+      text: "මුලකුරු සමඟ පියාගේ නම පවසන්න."
+    },
+    {
+      key: "motherName",
+      text: "මුලකුරු සමඟ මවගේ නම පවසන්න."
     }
+  ];
 
-    function startListening() {
+  let currentQuestion = 0;
+  let recognition = null;
+  let isListening = false;
 
-      const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+  function startRegistration() {
 
-      if (!SpeechRecognition) {
+    document.getElementById("welcomeArea").style.display = "none";
+    document.getElementById("questionArea").style.display = "block";
 
-        document.getElementById("status").textContent =
-          "මෙම බ්‍රවුසරය හඬ හඳුනාගැනීමට සහාය නොදක්වයි.";
+    showQuestion();
 
-        return;
-      }
+  }
 
-      if (isListening) return;
+  function showQuestion() {
 
-      recognition = new SpeechRecognition();
+    const question = questions[currentQuestion];
 
-      recognition.lang = "si-LK";
-      recognition.continuous = false;
-      recognition.interimResults = false;
+    document.getElementById("questionNumber").textContent =
+      "ප්‍රශ්නය " + (currentQuestion + 1) + " / 8";
+
+    document.getElementById("questionText").textContent =
+      question.text;
+
+    document.getElementById("answer").value =
+      answers[question.key];
+
+    document.getElementById("status").textContent =
+      "හඬ ලබාගැනීමට සූදානම්.";
+
+  }
+
+  function formatInitials(name) {
+
+    return name.replace(/^([a-z]+)/i, function(initials) {
+      return initials.toUpperCase();
+    });
+
+  }
+
+  function startListening() {
+
+    const SpeechRecognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
 
       document.getElementById("status").textContent =
-        "දැන් ඔබගේ හඬට සවන් දෙමින් සිටී...";
+        "මෙම බ්‍රවුසරය හඬ හඳුනාගැනීමට සහාය නොදක්වයි.";
 
-      document.getElementById("recordButton").disabled = true;
-      document.getElementById("stopButton").disabled = false;
+      return;
+    }
 
-      isListening = true;
+    if (isListening) return;
 
-      recognition.onresult = function(event) {
+    recognition = new SpeechRecognition();
 
-        const transcript = event.results[0][0].transcript;
+    recognition.lang = "si-LK";
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-        document.getElementById("fatherName").value = transcript;
+    document.getElementById("status").textContent =
+      "දැන් ඔබගේ හඬට සවන් දෙමින් සිටී...";
 
-        document.getElementById("status").textContent =
-          "හඬ ලබාගැනීම සාර්ථකයි. පිළිතුර පරීක්ෂා කරන්න.";
+    document.getElementById("recordButton").disabled = true;
+    document.getElementById("stopButton").disabled = false;
 
-      };
+    isListening = true;
 
-      recognition.onerror = function(event) {
+    recognition.onresult = function(event) {
 
-        document.getElementById("status").textContent =
-          "හඬ ලබාගැනීමේ දෝෂයක්: " + event.error;
+      const transcript = event.results[0][0].transcript;
 
-      };
+      document.getElementById("answer").value =
+        formatInitials(transcript);
 
-      recognition.onend = function() {
+      document.getElementById("status").textContent =
+        "හඬ ලබාගැනීම සාර්ථකයි. පිළිතුර පරීක්ෂා කරන්න.";
 
-        isListening = false;
+    };
 
-        document.getElementById("recordButton").disabled = false;
-        document.getElementById("stopButton").disabled = true;
+    recognition.onerror = function(event) {
 
-      };
+      document.getElementById("status").textContent =
+        "හඬ ලබාගැනීමේ දෝෂයක්: " + event.error;
 
-      try {
+    };
 
-        recognition.start();
+    recognition.onend = function() {
 
-      } catch (error) {
+      isListening = false;
 
-        isListening = false;
+      document.getElementById("recordButton").disabled = false;
+      document.getElementById("stopButton").disabled = true;
 
-        document.getElementById("recordButton").disabled = false;
-        document.getElementById("stopButton").disabled = true;
+    };
 
-        document.getElementById("status").textContent =
-          "හඬ ලබාගැනීම ආරම්භ කළ නොහැකි විය. නැවත උත්සාහ කරන්න.";
+    try {
 
-      }
+      recognition.start();
+
+    } catch (error) {
+
+      isListening = false;
+
+      document.getElementById("recordButton").disabled = false;
+      document.getElementById("stopButton").disabled = true;
+
+      document.getElementById("status").textContent =
+        "නැවත උත්සාහ කරන්න.";
 
     }
 
-    function stopListening() {
+  }
 
-      if (recognition && isListening) {
+  function stopListening() {
 
-        recognition.stop();
-
-        document.getElementById("status").textContent =
-          "හඬ ලබාගැනීම නතර කරන ලදී.";
-
-      }
-
+    if (recognition && isListening) {
+      recognition.stop();
     }
 
-    function confirmAnswer() {
+  }
 
-      const name = document.getElementById("fatherName").value.trim();
+  function confirmAnswer() {
 
-      if (name === "") {
+    if (isListening) {
+      stopListening();
+    }
 
-        alert("කරුණාකර පියාගේ නම ඇතුළත් කරන්න.");
+    const question = questions[currentQuestion];
 
-        return;
-      }
+    const answer = formatInitials(
+      document.getElementById("answer").value.trim()
+    );
 
-      if (isListening) {
-        stopListening();
-      }
+    if (answer === "") {
+
+      alert("කරුණාකර පිළිතුර ඇතුළත් කරන්න.");
+
+      return;
+    }
+
+    answers[question.key] = answer;
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+
+      showQuestion();
+
+    } else {
 
       document.getElementById("questionArea").style.display = "none";
-
       document.getElementById("successArea").style.display = "block";
 
-      document.getElementById("confirmedName").textContent =
-        "පියාගේ නම: " + name;
+      document.getElementById("fatherResult").textContent =
+        "පියාගේ නම: " + answers.fatherName;
+
+      document.getElementById("motherResult").textContent =
+        "මවගේ නම: " + answers.motherName;
 
     }
 
-  </script>
+  }
+
+</script>
 
 </body>
 </html>
