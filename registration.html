@@ -187,13 +187,125 @@
     </button>
   </p>
 
-</div>
 
-<div id="finalArea" style="display:none">
+function confirmRegistration() {
 
-  <h3>තොරතුරු පරීක්ෂා කිරීම සාර්ථකයි!</h3>
+  answers.fatherName = document.getElementById("reviewFather").value.trim();
+  answers.motherName = document.getElementById("reviewMother").value.trim();
+  answers.address = document.getElementById("reviewAddress").value.trim();
+  answers.phone = document.getElementById("reviewPhone").value.trim();
+  answers.childName = document.getElementById("reviewChildName").value.trim();
+  answers.school = document.getElementById("reviewSchool").value.trim();
+  answers.grade = document.getElementById("reviewGrade").value.trim();
+  answers.dob = document.getElementById("reviewDob").value.trim();
 
-  <p id="finalMessage"></p>
+  for (const key in answers) {
+    if (answers[key] === "") {
+      alert("කරුණාකර සියලු තොරතුරු සම්පූර්ණ කරන්න.");
+      return;
+    }
+  }
+
+  const phoneDigits = answers.phone.replace(/\D/g, "");
+
+  if (phoneDigits.length !== 10) {
+    alert("දුරකථන අංකය ඉලක්කම් 10කින් යුක්ත විය යුතුයි.");
+    return;
+  }
+
+  answers.phone =
+    phoneDigits.slice(0, 3) + " " +
+    phoneDigits.slice(3, 6) + " " +
+    phoneDigits.slice(6);
+
+  if (!/^[1-9]$/.test(answers.grade)) {
+    alert("ශ්‍රේණිය 1 සිට 9 දක්වා ඉලක්කමක් විය යුතුයි.");
+    return;
+  }
+
+  const dateMatch = answers.dob.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
+
+  if (!dateMatch) {
+    alert("උපන් දිනය YYYY/MM/DD ආකෘතියට ඇතුළත් කරන්න.");
+    return;
+  }
+
+  const year = Number(dateMatch[1]);
+  const month = Number(dateMatch[2]);
+  const day = Number(dateMatch[3]);
+
+  const date = new Date(year, month - 1, day);
+
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day ||
+    year < 1900
+  ) {
+    alert("කරුණාකර නිවැරදි උපන් දිනයක් ඇතුළත් කරන්න.");
+    return;
+  }
+
+  document.getElementById("reviewArea").style.display = "none";
+
+  document.getElementById("finalFather").textContent =
+    "පියාගේ නම: " + answers.fatherName;
+
+  document.getElementById("finalMother").textContent =
+    "මවගේ නම: " + answers.motherName;
+
+  document.getElementById("finalAddress").textContent =
+    "ලිපිනය: " + answers.address;
+
+  document.getElementById("finalPhone").textContent =
+    "දුරකථන අංකය: " + answers.phone;
+
+  document.getElementById("finalChildName").textContent =
+    "දරුවාගේ නම: " + answers.childName;
+
+  document.getElementById("finalSchool").textContent =
+    "පාසල: " + answers.school;
+
+  document.getElementById("finalGrade").textContent =
+    "දහම් පාසල් ශ්‍රේණිය: " + answers.grade + " ශ්‍රේණිය";
+
+  document.getElementById("finalDob").textContent =
+    "උපන් දිනය: " + answers.dob;
+
+  document.getElementById("finalReviewArea").style.display = "block";
+
+}
+
+
+function backToReview() {
+
+  document.getElementById("finalReviewArea").style.display = "none";
+
+  document.getElementById("reviewFather").value = answers.fatherName;
+  document.getElementById("reviewMother").value = answers.motherName;
+  document.getElementById("reviewAddress").value = answers.address;
+  document.getElementById("reviewPhone").value = answers.phone;
+  document.getElementById("reviewChildName").value = answers.childName;
+  document.getElementById("reviewSchool").value = answers.school;
+  document.getElementById("reviewGrade").value = answers.grade;
+  document.getElementById("reviewDob").value = answers.dob;
+
+  document.getElementById("reviewArea").style.display = "block";
+
+}
+
+
+function certifyInformation() {
+
+  document.getElementById("finalReviewArea").style.display = "none";
+
+  document.getElementById("finalArea").style.display = "block";
+
+  document.getElementById("finalMessage").textContent =
+    "ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව තහවුරු කරන ලදී. " +
+    "සැබෑ ලියාපදිංචිය සඳහා දත්ත ගබඩාවට සම්බන්ධ කිරීම ඊළඟ අදියරේදී සිදු කරනු ලැබේ.";
+
+}
 
 </div>
 
