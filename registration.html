@@ -154,7 +154,8 @@
     <p id="fatherResult"></p>
     <p id="motherResult"></p>
     <p id="addressResult"></p>
-
+    <p id="phoneResult"></p>
+    
 <p>
   මූලික තොරතුරු ඇතුළත් කිරීම සාර්ථකයි. ස්තූතියි!
 </p>
@@ -165,13 +166,14 @@
 
 <script>
 
-  const answers = {
+ const answers = {
   fatherName: "",
   motherName: "",
-  address: ""
+  address: "",
+  phone: ""
 };
 
- const questions = [
+const questions = [
   {
     key: "fatherName",
     text: "මුලකුරු සමඟ පියාගේ නම පවසන්න."
@@ -183,9 +185,12 @@
   {
     key: "address",
     text: "ඔබගේ ලිපිනය පවසන්න."
+  },
+  {
+    key: "phone",
+    text: "ඔබගේ WhatsApp දුරකථන අංකය ඇතුළත් කරන්න."
   }
 ];
-
 
   let currentQuestion = 0;
   let recognition = null;
@@ -199,24 +204,63 @@
     showQuestion();
 
   }
+  
+function showQuestion() {
 
-  function showQuestion() {
+  const question = questions[currentQuestion];
 
-    const question = questions[currentQuestion];
+  document.getElementById("questionNumber").textContent =
+    "ප්‍රශ්නය " + (currentQuestion + 1) + " / 8";
 
-    document.getElementById("questionNumber").textContent =
-      "ප්‍රශ්නය " + (currentQuestion + 1) + " / 8";
+  document.getElementById("questionText").textContent =
+    question.text;
 
-    document.getElementById("questionText").textContent =
-      question.text;
+  const answerInput = document.getElementById("answer");
+  const isPhone = question.key === "phone";
 
-    document.getElementById("answer").value =
-      answers[question.key];
+  answerInput.value = answers[question.key];
+
+  document.getElementById("recordButton").hidden = isPhone;
+  document.getElementById("stopButton").hidden = isPhone;
+
+  if (isPhone) {
+    answerInput.inputMode = "numeric";
+    answerInput.maxLength = 12;
+    answerInput.placeholder = "071 234 5678";
+
+    document.getElementById("status").textContent =
+      "ඉලක්කම් 10ක් ඇතුළත් කරන්න.";
+
+    answerInput.oninput = function() {
+      const digits = this.value.replace(/\D/g, "").slice(0, 10);
+
+      let formatted = digits;
+
+      if (digits.length > 3) {
+        formatted = digits.slice(0, 3) + " " + digits.slice(3, 6);
+      }
+
+      if (digits.length > 6) {
+        formatted += " " + digits.slice(6);
+      }
+
+      this.value = formatted;
+    };
+
+  } else {
+
+    answerInput.inputMode = "text";
+    answerInput.maxLength = 500;
+    answerInput.placeholder =
+      "පිළිතුර මෙහි දිස්වේ. අවශ්‍ය නම් සංශෝධනය කරන්න.";
+
+    answerInput.oninput = null;
 
     document.getElementById("status").textContent =
       "හඬ ලබාගැනීමට සූදානම්.";
-
   }
+
+}
 
   function formatInitials(name) {
 
@@ -327,6 +371,19 @@
       return;
     }
 
+if (question.key === "phone") {
+
+  const phoneDigits = answer.replace(/\D/g, "");
+
+  if (phoneDigits.length !== 10) {
+
+    alert("කරුණාකර ඉලක්කම් 10ක දුරකථන අංකයක් ඇතුළත් කරන්න.");
+
+    return;
+  }
+
+}
+
     answers[question.key] = answer;
 
     currentQuestion++;
@@ -348,6 +405,9 @@
       
       document.getElementById("addressResult").textContent =
       "ලිපිනය: " + answers.address;
+      
+      document.getElementById("phoneResult").textContent =
+      "දුරකථන අංකය: " + answers.phone;
     }
 
   }
