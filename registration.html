@@ -693,12 +693,10 @@ function confirmRegistration() {
   answers.dob = document.getElementById("reviewDob").value.trim();
 
   for (const key in answers) {
-
     if (answers[key] === "") {
       alert("කරුණාකර සියලු තොරතුරු සම්පූර්ණ කරන්න.");
       return;
     }
-
   }
 
   const phoneDigits = answers.phone.replace(/\D/g, "");
@@ -742,10 +740,53 @@ function confirmRegistration() {
   }
 
   document.getElementById("reviewArea").style.display = "none";
+
+  document.getElementById("finalFather").textContent =
+    "පියාගේ නම: " + answers.fatherName;
+  document.getElementById("finalMother").textContent =
+    "මවගේ නම: " + answers.motherName;
+  document.getElementById("finalAddress").textContent =
+    "ලිපිනය: " + answers.address;
+  document.getElementById("finalPhone").textContent =
+    "දුරකථන අංකය: " + answers.phone;
+  document.getElementById("finalChildName").textContent =
+    "දරුවාගේ නම: " + answers.childName;
+  document.getElementById("finalSchool").textContent =
+    "පාසල: " + answers.school;
+  document.getElementById("finalGrade").textContent =
+    "දහම් පාසල් ශ්‍රේණිය: " + answers.grade + " ශ්‍රේණිය";
+  document.getElementById("finalDob").textContent =
+    "උපන් දිනය: " + answers.dob;
+
+  document.getElementById("finalReviewArea").style.display = "block";
+}
+
+
+function backToReview() {
+
+  document.getElementById("finalReviewArea").style.display = "none";
+
+  document.getElementById("reviewFather").value = answers.fatherName;
+  document.getElementById("reviewMother").value = answers.motherName;
+  document.getElementById("reviewAddress").value = answers.address;
+  document.getElementById("reviewPhone").value = answers.phone;
+  document.getElementById("reviewChildName").value = answers.childName;
+  document.getElementById("reviewSchool").value = answers.school;
+  document.getElementById("reviewGrade").value = answers.grade;
+  document.getElementById("reviewDob").value = answers.dob;
+
+  document.getElementById("reviewArea").style.display = "block";
+}
+
+
+function certifyInformation() {
+
+  document.getElementById("finalReviewArea").style.display = "none";
   document.getElementById("finalArea").style.display = "block";
 
   document.getElementById("finalMessage").textContent =
-    "ඔබ ඇතුළත් කළ තොරතුරු පරීක්ෂා කිරීම සාර්ථකයි. ස්තූතියි!";
+    "ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව තහවුරු කරන ලදී. " +
+    "සැබෑ ලියාපදිංචිය සඳහා දත්ත ගබඩාවට සම්බන්ධ කිරීම ඊළඟ අදියරේදී සිදු කරනු ලැබේ.";
 
 }
 
