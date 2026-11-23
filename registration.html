@@ -242,8 +242,7 @@
 
       const transcript = event.results[0][0].transcript;
 
-      document.getElementById("answer").value =
-        formatInitials(transcript);
+      document.getElementById("answer").value = transcript;
 
       document.getElementById("status").textContent =
         "හඬ ලබාගැනීම සාර්ථකයි. පිළිතුර පරීක්ෂා කරන්න.";
@@ -300,9 +299,8 @@
 
     const question = questions[currentQuestion];
 
-    const answer = formatInitials(
-      document.getElementById("answer").value.trim()
-    );
+    const answer =
+  document.getElementById("answer").value.trim();
 
     if (answer === "") {
 
