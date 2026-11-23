@@ -146,24 +146,54 @@
     </button>
 
   </div>
-
   
-<div id="successArea">
 
-  <h3>ප්‍රශ්න අට සාර්ථකයි!</h3>
+<div id="reviewArea" style="display:none">
 
-  <p id="fatherResult"></p>
-  <p id="motherResult"></p>
-  <p id="addressResult"></p>
-  <p id="phoneResult"></p>
-  <p id="childNameResult"></p>
-  <p id="schoolResult"></p>
-  <p id="gradeResult"></p>
-  <p id="dobResult"></p>
+  <h3>ඔබ ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
+
+  <p class="note">
+    සියලු තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.
+    අවශ්‍ය නම් මෙහිදීම සංශෝධනය කරන්න.
+  </p>
+
+  <p>පියාගේ නම</p>
+  <textarea id="reviewFather"></textarea>
+
+  <p>මවගේ නම</p>
+  <textarea id="reviewMother"></textarea>
+
+  <p>ලිපිනය</p>
+  <textarea id="reviewAddress"></textarea>
+
+  <p>WhatsApp දුරකථන අංකය</p>
+  <textarea id="reviewPhone"></textarea>
+
+  <p>දරුවාගේ සම්පූර්ණ නම</p>
+  <textarea id="reviewChildName"></textarea>
+
+  <p>දරුවා ඉගෙනුම ලබන පාසල</p>
+  <textarea id="reviewSchool"></textarea>
+
+  <p>දහම් පාසල් ශ්‍රේණිය</p>
+  <textarea id="reviewGrade"></textarea>
+
+  <p>උපන් දිනය (YYYY/MM/DD)</p>
+  <textarea id="reviewDob"></textarea>
 
   <p>
-    මූලික තොරතුරු ඇතුළත් කිරීම සාර්ථකයි. ස්තූතියි!
+    <button onclick="confirmRegistration()">
+      සියලු තොරතුරු නිවැරදියි
+    </button>
   </p>
+
+</div>
+
+<div id="finalArea" style="display:none">
+
+  <h3>තොරතුරු පරීක්ෂා කිරීම සාර්ථකයි!</h3>
+
+  <p id="finalMessage"></p>
 
 </div>
 
