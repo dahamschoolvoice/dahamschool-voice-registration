@@ -149,36 +149,43 @@
 
   <div id="successArea">
 
-    <h3>ප්‍රශ්න දෙක සාර්ථකයි!</h3>
-
+    <h3>ප්‍රශ්න තුන සාර්ථකයි!</h3>
+    
     <p id="fatherResult"></p>
     <p id="motherResult"></p>
+    <p id="addressResult"></p>
 
-    <p>
-      ඊළඟට තෙවන ප්‍රශ්නය එකතු කරමු.
-    </p>
+<p>
+  මූලික තොරතුරු ඇතුළත් කිරීම සාර්ථකයි. ස්තූතියි!
+</p>
 
-  </div>
+</div>
 
 </div>
 
 <script>
 
   const answers = {
-    fatherName: "",
-    motherName: ""
-  };
+  fatherName: "",
+  motherName: "",
+  address: ""
+};
 
-  const questions = [
-    {
-      key: "fatherName",
-      text: "මුලකුරු සමඟ පියාගේ නම පවසන්න."
-    },
-    {
-      key: "motherName",
-      text: "මුලකුරු සමඟ මවගේ නම පවසන්න."
-    }
-  ];
+ const questions = [
+  {
+    key: "fatherName",
+    text: "මුලකුරු සමඟ පියාගේ නම පවසන්න."
+  },
+  {
+    key: "motherName",
+    text: "මුලකුරු සමඟ මවගේ නම පවසන්න."
+  },
+  {
+    key: "address",
+    text: "ඔබගේ ලිපිනය පවසන්න."
+  }
+];
+
 
   let currentQuestion = 0;
   let recognition = null;
@@ -338,7 +345,9 @@
 
       document.getElementById("motherResult").textContent =
         "මවගේ නම: " + answers.motherName;
-
+      
+      document.getElementById("addressResult").textContent =
+      "ලිපිනය: " + answers.address;
     }
 
   }
