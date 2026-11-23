@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="si">
 <head>
@@ -40,6 +39,7 @@
     }
 
     button:hover { background: #10532c; }
+
     button:disabled {
       background: #999;
       cursor: not-allowed;
@@ -61,16 +61,16 @@
       font-size: 14px;
     }
 
-#questionText {
-  font-size: 25px;
-  font-weight: bold;
-  color: #145c32;
-  line-height: 1.8;
-  background: #e8f5e9;
-  padding: 16px;
-  border-radius: 10px;
-  margin: 20px 0;
-}
+    #questionText {
+      font-size: 25px;
+      font-weight: bold;
+      color: #145c32;
+      line-height: 1.8;
+      background: #e8f5e9;
+      padding: 16px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
 
     #status {
       color: #176b3a;
@@ -78,7 +78,10 @@
       margin: 15px;
     }
 
-    #questionArea, #successArea {
+    #questionArea,
+    #reviewArea,
+    #finalReviewArea,
+    #finalArea {
       display: none;
     }
   </style>
@@ -134,8 +137,7 @@
     <p>ලබාගත් පිළිතුර:</p>
 
     <textarea id="answer"
-      placeholder="පිළිතුර මෙහි දිස්වේ. අවශ්‍ය නම් සංශෝධනය කරන්න.">
-    </textarea>
+      placeholder="පිළිතුර මෙහි දිස්වේ. අවශ්‍ය නම් සංශෝධනය කරන්න."></textarea>
 
     <p class="note">
       පිළිතුර නිවැරදි නොවේ නම් මෙහි සංශෝධනය කළ හැකිය.
@@ -146,171 +148,90 @@
     </button>
 
   </div>
-  
 
-<div id="reviewArea" style="display:none">
+  <div id="reviewArea">
 
-  <h3>ඔබ ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
+    <h3>ඔබ ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
 
-  <p class="note">
-    සියලු තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.
-    අවශ්‍ය නම් මෙහිදීම සංශෝධනය කරන්න.
-  </p>
+    <p class="note">
+      සියලු තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.
+      අවශ්‍ය නම් මෙහිදීම සංශෝධනය කරන්න.
+    </p>
 
-  <p>පියාගේ නම</p>
-  <textarea id="reviewFather"></textarea>
+    <p>පියාගේ නම</p>
+    <textarea id="reviewFather"></textarea>
 
-  <p>මවගේ නම</p>
-  <textarea id="reviewMother"></textarea>
+    <p>මවගේ නම</p>
+    <textarea id="reviewMother"></textarea>
 
-  <p>ලිපිනය</p>
-  <textarea id="reviewAddress"></textarea>
+    <p>ලිපිනය</p>
+    <textarea id="reviewAddress"></textarea>
 
-  <p>WhatsApp දුරකථන අංකය</p>
-  <textarea id="reviewPhone"></textarea>
+    <p>WhatsApp දුරකථන අංකය</p>
+    <textarea id="reviewPhone"></textarea>
 
-  <p>දරුවාගේ සම්පූර්ණ නම</p>
-  <textarea id="reviewChildName"></textarea>
+    <p>දරුවාගේ සම්පූර්ණ නම</p>
+    <textarea id="reviewChildName"></textarea>
 
-  <p>දරුවා ඉගෙනුම ලබන පාසල</p>
-  <textarea id="reviewSchool"></textarea>
+    <p>දරුවා ඉගෙනුම ලබන පාසල</p>
+    <textarea id="reviewSchool"></textarea>
 
-  <p>දහම් පාසල් ශ්‍රේණිය</p>
-  <textarea id="reviewGrade"></textarea>
+    <p>දහම් පාසල් ශ්‍රේණිය</p>
+    <textarea id="reviewGrade"></textarea>
 
-  <p>උපන් දිනය (YYYY/MM/DD)</p>
-  <textarea id="reviewDob"></textarea>
+    <p>උපන් දිනය (YYYY/MM/DD)</p>
+    <textarea id="reviewDob"></textarea>
 
-  <p>
-    <button onclick="confirmRegistration()">
-      සියලු තොරතුරු නිවැරදියි
+    <p>
+      <button onclick="confirmRegistration()">
+        සියලු තොරතුරු නිවැරදියි
+      </button>
+    </p>
+
+  </div>
+
+  <div id="finalReviewArea">
+
+    <h3>අවසාන තොරතුරු ලැයිස්තුව</h3>
+
+    <p class="note">
+      කරුණාකර පහත සියලු තොරතුරු අවසන් වරට පරීක්ෂා කරන්න.
+    </p>
+
+    <p id="finalFather"></p>
+    <p id="finalMother"></p>
+    <p id="finalAddress"></p>
+    <p id="finalPhone"></p>
+    <p id="finalChildName"></p>
+    <p id="finalSchool"></p>
+    <p id="finalGrade"></p>
+    <p id="finalDob"></p>
+
+    <hr>
+
+    <p>
+      ඉහත තොරතුරු සියල්ල නිවැරදි බව ඔබ සහතික කරන්නේද?
+    </p>
+
+    <button onclick="backToReview()">
+      නැවත සංශෝධනය කරන්න
     </button>
-  </p>
 
+    <button onclick="certifyInformation()">
+      තොරතුරු නිවැරදි බව සහතික කරමි
+    </button>
 
-function confirmRegistration() {
+  </div>
 
-  answers.fatherName = document.getElementById("reviewFather").value.trim();
-  answers.motherName = document.getElementById("reviewMother").value.trim();
-  answers.address = document.getElementById("reviewAddress").value.trim();
-  answers.phone = document.getElementById("reviewPhone").value.trim();
-  answers.childName = document.getElementById("reviewChildName").value.trim();
-  answers.school = document.getElementById("reviewSchool").value.trim();
-  answers.grade = document.getElementById("reviewGrade").value.trim();
-  answers.dob = document.getElementById("reviewDob").value.trim();
+  <div id="finalArea">
 
-  for (const key in answers) {
-    if (answers[key] === "") {
-      alert("කරුණාකර සියලු තොරතුරු සම්පූර්ණ කරන්න.");
-      return;
-    }
-  }
+    <h3>තොරතුරු තහවුරු කිරීම සාර්ථකයි!</h3>
 
-  const phoneDigits = answers.phone.replace(/\D/g, "");
+    <p id="finalMessage"></p>
 
-  if (phoneDigits.length !== 10) {
-    alert("දුරකථන අංකය ඉලක්කම් 10කින් යුක්ත විය යුතුයි.");
-    return;
-  }
-
-  answers.phone =
-    phoneDigits.slice(0, 3) + " " +
-    phoneDigits.slice(3, 6) + " " +
-    phoneDigits.slice(6);
-
-  if (!/^[1-9]$/.test(answers.grade)) {
-    alert("ශ්‍රේණිය 1 සිට 9 දක්වා ඉලක්කමක් විය යුතුයි.");
-    return;
-  }
-
-  const dateMatch = answers.dob.match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
-
-  if (!dateMatch) {
-    alert("උපන් දිනය YYYY/MM/DD ආකෘතියට ඇතුළත් කරන්න.");
-    return;
-  }
-
-  const year = Number(dateMatch[1]);
-  const month = Number(dateMatch[2]);
-  const day = Number(dateMatch[3]);
-
-  const date = new Date(year, month - 1, day);
-
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day ||
-    year < 1900
-  ) {
-    alert("කරුණාකර නිවැරදි උපන් දිනයක් ඇතුළත් කරන්න.");
-    return;
-  }
-
-  document.getElementById("reviewArea").style.display = "none";
-
-  document.getElementById("finalFather").textContent =
-    "පියාගේ නම: " + answers.fatherName;
-
-  document.getElementById("finalMother").textContent =
-    "මවගේ නම: " + answers.motherName;
-
-  document.getElementById("finalAddress").textContent =
-    "ලිපිනය: " + answers.address;
-
-  document.getElementById("finalPhone").textContent =
-    "දුරකථන අංකය: " + answers.phone;
-
-  document.getElementById("finalChildName").textContent =
-    "දරුවාගේ නම: " + answers.childName;
-
-  document.getElementById("finalSchool").textContent =
-    "පාසල: " + answers.school;
-
-  document.getElementById("finalGrade").textContent =
-    "දහම් පාසල් ශ්‍රේණිය: " + answers.grade + " ශ්‍රේණිය";
-
-  document.getElementById("finalDob").textContent =
-    "උපන් දිනය: " + answers.dob;
-
-  document.getElementById("finalReviewArea").style.display = "block";
-
-}
-
-
-function backToReview() {
-
-  document.getElementById("finalReviewArea").style.display = "none";
-
-  document.getElementById("reviewFather").value = answers.fatherName;
-  document.getElementById("reviewMother").value = answers.motherName;
-  document.getElementById("reviewAddress").value = answers.address;
-  document.getElementById("reviewPhone").value = answers.phone;
-  document.getElementById("reviewChildName").value = answers.childName;
-  document.getElementById("reviewSchool").value = answers.school;
-  document.getElementById("reviewGrade").value = answers.grade;
-  document.getElementById("reviewDob").value = answers.dob;
-
-  document.getElementById("reviewArea").style.display = "block";
-
-}
-
-
-function certifyInformation() {
-
-  document.getElementById("finalReviewArea").style.display = "none";
-
-  document.getElementById("finalArea").style.display = "block";
-
-  document.getElementById("finalMessage").textContent =
-    "ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව තහවුරු කරන ලදී. " +
-    "සැබෑ ලියාපදිංචිය සඳහා දත්ත ගබඩාවට සම්බන්ධ කිරීම ඊළඟ අදියරේදී සිදු කරනු ලැබේ.";
-
-}
+  </div>
 
 </div>
-
-</div>
-
 
 <script>
 
@@ -594,7 +515,6 @@ function confirmAnswer() {
 
   }
 
-
   if (question.key === "phone") {
 
     const phoneDigits = answer.replace(/\D/g, "");
@@ -608,7 +528,6 @@ function confirmAnswer() {
 
   }
 
-
   if (question.key === "grade") {
 
     if (!/^[1-9]$/.test(answer)) {
@@ -619,7 +538,6 @@ function confirmAnswer() {
     }
 
   }
-
 
   if (question.key === "dob") {
 
@@ -652,34 +570,32 @@ function confirmAnswer() {
 
   }
 
-
   answers[question.key] = answer;
 
   currentQuestion++;
 
-  
-if (currentQuestion < questions.length) {
+  if (currentQuestion < questions.length) {
 
-  showQuestion();
+    showQuestion();
 
-} else {
+  } else {
 
-  document.getElementById("questionArea").style.display = "none";
+    document.getElementById("questionArea").style.display = "none";
+    document.getElementById("reviewArea").style.display = "block";
 
-  document.getElementById("reviewArea").style.display = "block";
+    document.getElementById("reviewFather").value = answers.fatherName;
+    document.getElementById("reviewMother").value = answers.motherName;
+    document.getElementById("reviewAddress").value = answers.address;
+    document.getElementById("reviewPhone").value = answers.phone;
+    document.getElementById("reviewChildName").value = answers.childName;
+    document.getElementById("reviewSchool").value = answers.school;
+    document.getElementById("reviewGrade").value = answers.grade;
+    document.getElementById("reviewDob").value = answers.dob;
 
-  document.getElementById("reviewFather").value = answers.fatherName;
-  document.getElementById("reviewMother").value = answers.motherName;
-  document.getElementById("reviewAddress").value = answers.address;
-  document.getElementById("reviewPhone").value = answers.phone;
-  document.getElementById("reviewChildName").value = answers.childName;
-  document.getElementById("reviewSchool").value = answers.school;
-  document.getElementById("reviewGrade").value = answers.grade;
-  document.getElementById("reviewDob").value = answers.dob;
-
-}
+  }
 
 }
+
 
 function confirmRegistration() {
 
@@ -693,10 +609,12 @@ function confirmRegistration() {
   answers.dob = document.getElementById("reviewDob").value.trim();
 
   for (const key in answers) {
+
     if (answers[key] === "") {
       alert("කරුණාකර සියලු තොරතුරු සම්පූර්ණ කරන්න.");
       return;
     }
+
   }
 
   const phoneDigits = answers.phone.replace(/\D/g, "");
@@ -743,22 +661,30 @@ function confirmRegistration() {
 
   document.getElementById("finalFather").textContent =
     "පියාගේ නම: " + answers.fatherName;
+
   document.getElementById("finalMother").textContent =
     "මවගේ නම: " + answers.motherName;
+
   document.getElementById("finalAddress").textContent =
     "ලිපිනය: " + answers.address;
+
   document.getElementById("finalPhone").textContent =
     "දුරකථන අංකය: " + answers.phone;
+
   document.getElementById("finalChildName").textContent =
     "දරුවාගේ නම: " + answers.childName;
+
   document.getElementById("finalSchool").textContent =
     "පාසල: " + answers.school;
+
   document.getElementById("finalGrade").textContent =
     "දහම් පාසල් ශ්‍රේණිය: " + answers.grade + " ශ්‍රේණිය";
+
   document.getElementById("finalDob").textContent =
     "උපන් දිනය: " + answers.dob;
 
   document.getElementById("finalReviewArea").style.display = "block";
+
 }
 
 
@@ -776,6 +702,7 @@ function backToReview() {
   document.getElementById("reviewDob").value = answers.dob;
 
   document.getElementById("reviewArea").style.display = "block";
+
 }
 
 
@@ -791,7 +718,6 @@ function certifyInformation() {
 }
 
 </script>
-
 
 </body>
 </html>
