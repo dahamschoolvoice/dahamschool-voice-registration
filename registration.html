@@ -27,6 +27,10 @@
       color: #176b3a;
     }
 
+    h3 {
+      color: #285b3b;
+    }
+
     p {
       line-height: 1.8;
     }
@@ -46,9 +50,36 @@
       background: #10532c;
     }
 
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    textarea {
+      width: 95%;
+      min-height: 85px;
+      padding: 10px;
+      font-size: 17px;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      box-sizing: border-box;
+      margin-top: 12px;
+    }
+
     .note {
-      color: #555;
+      color: #666;
       font-size: 14px;
+    }
+
+    #status {
+      color: #176b3a;
+      font-weight: bold;
+      margin: 15px;
+    }
+
+    #questionArea,
+    #successArea {
+      display: none;
     }
   </style>
 </head>
@@ -58,34 +89,209 @@
   <div class="container">
 
     <h2>මුදුණකඩේ ශ්‍රී බෝධිරාජ දහම් පාසල</h2>
-
     <h3>සිසු ලියාපදිංචිය</h3>
 
-    <p>
-      ආයුබෝවන්! මුදුණකඩේ ශ්‍රී බෝධිරාජ
-      දහම් පාසල් සිසුන් ලියාපදිංචි කිරීමේ
-      පද්ධතිය වෙත ඔබ සාදරයෙන් පිළිගනිමු.
-    </p>
+    <div id="welcomeArea">
 
-    <p>
-      ඔබේ දරුවා දහම් පාසලේ ලියාපදිංචි කිරීම
-      සඳහා අපට අවශ්‍ය තොරතුරු දැන් ලබාදෙන්න.
-    </p>
+      <p>
+        ආයුබෝවන්! මුදුණකඩේ ශ්‍රී බෝධිරාජ
+        දහම් පාසල් සිසුන් ලියාපදිංචි කිරීමේ
+        පද්ධතිය වෙත ඔබ සාදරයෙන් පිළිගනිමු.
+      </p>
 
-    <button onclick="startRegistration()">
-      ලියාපදිංචිය ආරම්භ කරන්න
-    </button>
+      <p>
+        ඔබේ දරුවා දහම් පාසලේ ලියාපදිංචි කිරීම
+        සඳහා අපට අවශ්‍ය තොරතුරු දැන් ලබාදෙන්න.
+      </p>
 
-    <p class="note">
-      තොරතුරු නිවැරදිව ලබාදීමට කරුණාකර සහය වන්න.
-    </p>
+      <button onclick="startRegistration()">
+        ලියාපදිංචිය ආරම්භ කරන්න
+      </button>
+
+    </div>
+
+    <div id="questionArea">
+
+      <h3>ප්‍රශ්නය 1 / 8</h3>
+
+      <p>
+        මුලකුරු සමඟ පියාගේ නම පවසන්න.
+      </p>
+
+      <p class="note">
+        පහත බොත්තම ඔබා පැහැදිලිව නම පවසන්න.
+      </p>
+
+      <button id="recordButton" onclick="startListening()">
+        🎤 හඬ මගින් නම පවසන්න
+      </button>
+
+      <button id="stopButton" onclick="stopListening()" disabled>
+        හඬ පටිගත කිරීම නවත්වන්න
+      </button>
+
+      <div id="status">
+        හඬ ලබාගැනීමට සූදානම්.
+      </div>
+
+      <p>ලබාගත් පිළිතුර:</p>
+
+      <textarea
+        id="fatherName"
+        placeholder="පියාගේ නම මෙහි දිස්වේ. අවශ්‍ය නම් සංශෝධනය කරන්න."
+      ></textarea>
+
+      <p class="note">
+        හඬ මගින් ලබාගත් නම නිවැරදි නොවේ නම්
+        මෙහි යතුරු පුවරුවෙන් සංශෝධනය කළ හැකිය.
+      </p>
+
+      <button onclick="confirmAnswer()">
+        පිළිතුර තහවුරු කරන්න
+      </button>
+
+    </div>
+
+    <div id="successArea">
+
+      <h3>පළමු ප්‍රශ්නය සාර්ථකයි!</h3>
+
+      <p id="confirmedName"></p>
+
+      <p>
+        පියාගේ නම තහවුරු කර ඇත.
+        ඊළඟට දෙවන ප්‍රශ්නය එකතු කරමු.
+      </p>
+
+    </div>
 
   </div>
 
   <script>
+
+    let recognition;
+    let isListening = false;
+
     function startRegistration() {
-      alert("ලියාපදිංචි කිරීමේ කටයුතු ඉක්මනින් ආරම්භ වේ.");
+
+      document.getElementById("welcomeArea").style.display = "none";
+
+      document.getElementById("questionArea").style.display = "block";
+
     }
+
+    function startListening() {
+
+      const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+
+        document.getElementById("status").textContent =
+          "මෙම බ්‍රවුසරය හඬ හඳුනාගැනීමට සහාය නොදක්වයි.";
+
+        return;
+      }
+
+      if (isListening) return;
+
+      recognition = new SpeechRecognition();
+
+      recognition.lang = "si-LK";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      document.getElementById("status").textContent =
+        "දැන් ඔබගේ හඬට සවන් දෙමින් සිටී...";
+
+      document.getElementById("recordButton").disabled = true;
+      document.getElementById("stopButton").disabled = false;
+
+      isListening = true;
+
+      recognition.onresult = function(event) {
+
+        const transcript = event.results[0][0].transcript;
+
+        document.getElementById("fatherName").value = transcript;
+
+        document.getElementById("status").textContent =
+          "හඬ ලබාගැනීම සාර්ථකයි. පිළිතුර පරීක්ෂා කරන්න.";
+
+      };
+
+      recognition.onerror = function(event) {
+
+        document.getElementById("status").textContent =
+          "හඬ ලබාගැනීමේ දෝෂයක්: " + event.error;
+
+      };
+
+      recognition.onend = function() {
+
+        isListening = false;
+
+        document.getElementById("recordButton").disabled = false;
+        document.getElementById("stopButton").disabled = true;
+
+      };
+
+      try {
+
+        recognition.start();
+
+      } catch (error) {
+
+        isListening = false;
+
+        document.getElementById("recordButton").disabled = false;
+        document.getElementById("stopButton").disabled = true;
+
+        document.getElementById("status").textContent =
+          "හඬ ලබාගැනීම ආරම්භ කළ නොහැකි විය. නැවත උත්සාහ කරන්න.";
+
+      }
+
+    }
+
+    function stopListening() {
+
+      if (recognition && isListening) {
+
+        recognition.stop();
+
+        document.getElementById("status").textContent =
+          "හඬ ලබාගැනීම නතර කරන ලදී.";
+
+      }
+
+    }
+
+    function confirmAnswer() {
+
+      const name = document.getElementById("fatherName").value.trim();
+
+      if (name === "") {
+
+        alert("කරුණාකර පියාගේ නම ඇතුළත් කරන්න.");
+
+        return;
+      }
+
+      if (isListening) {
+        stopListening();
+      }
+
+      document.getElementById("questionArea").style.display = "none";
+
+      document.getElementById("successArea").style.display = "block";
+
+      document.getElementById("confirmedName").textContent =
+        "පියාගේ නම: " + name;
+
+    }
+
   </script>
 
 </body>
