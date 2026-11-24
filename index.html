@@ -108,6 +108,13 @@
       width: 100%;
     }
 
+    .test-button {
+      background: #315f91;
+      color: white;
+      width: 100%;
+      margin-top: 12px;
+    }
+
     .message {
       display: none;
       padding: 13px;
@@ -268,6 +275,15 @@
       <div id="turnstileMessage">
         Cloudflare ආරක්ෂක පරීක්ෂාව සූදානම් වෙමින් පවතී...
       </div>
+
+      <button class="test-button" id="testButton" type="button"
+              onclick="testTurnstileOnly()">
+        ආරක්ෂක පරීක්ෂාව පමණක් තහවුරු කරන්න
+      </button>
+
+      <p class="small-note">
+        මෙය තාවකාලික පරීක්ෂණ බොත්තමකි. මෙයින් ශිෂ්‍ය තොරතුරු ලියාපදිංචි නොවේ.
+      </p>
     </div>
 
     <button class="secondary-button" type="button" onclick="editDetails()">
@@ -314,6 +330,7 @@
   let pendingRequestId = null;
   let responseTimer = null;
   let recognition = null;
+  let pendingTestOnly = false;
 
   let turnstileWidgetId = null;
   let turnstileToken = null;
@@ -348,12 +365,10 @@
     document.getElementById("errorMessage").style.display = "none";
   }
 
-  // Cloudflare Turnstile පණිවිඩය
   function setTurnstileMessage(message) {
     document.getElementById("turnstileMessage").textContent = message;
   }
 
-  // Cloudflare ආරක්ෂක Widget එක සකස් කිරීම
   function setupTurnstile() {
     if (!window.turnstile) {
       setTurnstileMessage(
@@ -382,7 +397,7 @@
           callback: function(token) {
             turnstileToken = token;
             setTurnstileMessage(
-              "ආරක්ෂක පරීක්ෂාව සාර්ථකයි. දැන් ලියාපදිංචිය තහවුරු කළ හැකියි."
+              "ආරක්ෂක පරීක්ෂාව සාර්ථකයි. දැන් පරීක්ෂණය කළ හැකියි."
             );
           },
 
@@ -416,7 +431,6 @@
     }
   }
 
-  // Cloudflare API එක සූදානම් වූ විට ක්‍රියාත්මක වේ
   function onTurnstileLoad() {
     setupTurnstile();
   }
@@ -644,6 +658,56 @@
     window.scrollTo({top: 0, behavior: "smooth"});
   }
 
+  // Cloudflare Token එක පමණක් පරීක්ෂා කිරීම.
+  // මෙයින් saveRegistration() ක්‍රියාත්මක නොවේ.
+  function testTurnstileOnly() {
+    if (pendingRequestId) return;
+
+    if (!turnstileToken) {
+      alert("කරුණාකර Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.");
+      setupTurnstile();
+      return;
+    }
+
+    const button = document.getElementById("testButton");
+    button.disabled = true;
+    button.textContent = "ආරක්ෂක පරීක්ෂාව සිදු කරමින්...";
+
+    pendingTestOnly = true;
+
+    pendingRequestId =
+      (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : String(Date.now()) + String(Math.random()).slice(2);
+
+    const testPayload = {
+      requestId: pendingRequestId,
+      turnstileToken: turnstileToken,
+      testOnly: true
+    };
+
+    document.getElementById("payload").value =
+      JSON.stringify(testPayload);
+
+    document.getElementById("googleSheetForm").submit();
+
+    responseTimer = setTimeout(function() {
+      if (pendingRequestId) {
+        pendingRequestId = null;
+        pendingTestOnly = false;
+        button.disabled = false;
+        button.textContent = "ආරක්ෂක පරීක්ෂාව පමණක් තහවුරු කරන්න";
+
+        resetTurnstile();
+
+        alert(
+          "පරීක්ෂණයට පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
+          "කිසිදු ලියාපදිංචියක් සිදු කිරීමට උත්සාහ නොකරන්න."
+        );
+      }
+    }, 45000);
+  }
+
   function confirmRegistration() {
     if (!currentData || pendingRequestId) return;
 
@@ -660,6 +724,8 @@
     const button = document.getElementById("confirmButton");
     button.disabled = true;
     button.textContent = "තොරතුරු යවමින් පවතී...";
+
+    pendingTestOnly = false;
 
     pendingRequestId =
       (window.crypto && crypto.randomUUID)
@@ -709,6 +775,29 @@
 
     clearTimeout(responseTimer);
     pendingRequestId = null;
+
+    if (pendingTestOnly) {
+      pendingTestOnly = false;
+
+      const testButton = document.getElementById("testButton");
+      testButton.disabled = false;
+      testButton.textContent = "ආරක්ෂක පරීක්ෂාව පමණක් තහවුරු කරන්න";
+
+      if (event.data.success && event.data.testOnly === true) {
+        resetTurnstile();
+        setTurnstileMessage(
+          "සාර්ථකයි! Apps Script එක Cloudflare Token එක නිවැරදිව තහවුරු කළා. පරීක්ෂණය පමණයි; ශිෂ්‍ය තොරතුරු සුරැකුවේ නැත. නැවත පරීක්ෂා කිරීමට අලුත් ආරක්ෂක පරීක්ෂාවක් සම්පූර්ණ කරන්න."
+        );
+      } else {
+        resetTurnstile();
+        alert(
+          event.data.message ||
+          "Cloudflare Token පරීක්ෂාව අසාර්ථක වුණා."
+        );
+      }
+
+      return;
+    }
 
     const button = document.getElementById("confirmButton");
     button.disabled = false;
