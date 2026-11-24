@@ -47,7 +47,7 @@
       margin-bottom: 7px;
     }
 
-    input, select {
+    input {
       width: 100%;
       padding: 12px;
       border: 1px solid #b8c8bc;
@@ -56,7 +56,7 @@
       background: white;
     }
 
-    input:focus, select:focus {
+    input:focus {
       outline: 2px solid #80b994;
       border-color: #247b45;
     }
@@ -89,6 +89,11 @@
       font-weight: bold;
     }
 
+    button:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+    }
+
     .main-button {
       width: 100%;
       background: #19733d;
@@ -119,6 +124,7 @@
       padding: 10px 0;
       border-bottom: 1px solid #e5eae6;
       line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
     .review-item strong { color: #176b38; }
@@ -150,7 +156,7 @@
   <div id="entrySection">
 
     <div class="message error" id="errorMessage"></div>
-    <div class="message info" id="voiceMessage"></div>
+    <div class="message info" id="voiceMessage" style="display:none"></div>
 
     <div class="field">
       <label for="fatherName">පියාගේ නම *</label>
@@ -201,25 +207,16 @@
 
     <div class="field">
       <label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
-      <select id="grade">
-        <option value="">ශ්‍රේණිය තෝරන්න</option>
-        <option value="1">1 ශ්‍රේණිය</option>
-        <option value="2">2 ශ්‍රේණිය</option>
-        <option value="3">3 ශ්‍රේණිය</option>
-        <option value="4">4 ශ්‍රේණිය</option>
-        <option value="5">5 ශ්‍රේණිය</option>
-        <option value="6">6 ශ්‍රේණිය</option>
-        <option value="7">7 ශ්‍රේණිය</option>
-        <option value="8">8 ශ්‍රේණිය</option>
-        <option value="9">9 ශ්‍රේණිය</option>
-        <option value="10">10 ශ්‍රේණිය</option>
-        <option value="11">11 ශ්‍රේණිය</option>
-      </select>
+      <input id="grade" type="text" inputmode="numeric"
+             maxlength="2" placeholder="1 සිට 11 දක්වා ශ්‍රේණිය">
+      <div class="small-note">1 සිට 11 දක්වා ඉලක්කම ඇතුළත් කරන්න.</div>
     </div>
 
     <div class="field">
       <label for="dob">උපන් දිනය *</label>
-      <input id="dob" type="date">
+      <input id="dob" type="text" inputmode="numeric"
+             maxlength="10" placeholder="YYYY/MM/DD">
+      <div class="small-note">උදාහරණය: 2015/07/09</div>
     </div>
 
     <button class="main-button" type="button" onclick="showReview()">
@@ -241,7 +238,7 @@
 
     <button class="main-button" id="confirmButton" type="button"
             onclick="confirmRegistration()">
-      තොරතුරු නිවැරදියි - ලියාපදිංචි කරන්න
+      තොරතුරු නිවැරදි බව සහතික කරමි
     </button>
   </div>
 
@@ -258,7 +255,6 @@
 
 </div>
 
-<!-- Google Apps Script වෙත දත්ත යැවීම සඳහා සැඟවූ iframe සහ form -->
 <iframe name="googleSheetFrame" id="googleSheetFrame"
         style="display:none"></iframe>
 
@@ -306,6 +302,39 @@
 
   function hideError() {
     document.getElementById("errorMessage").style.display = "none";
+  }
+
+  function parseBirthDate(value) {
+    if (!/^\d{4}\/\d{2}\/\d{2}$/.test(value)) {
+      return null;
+    }
+
+    const parts = value.split("/").map(Number);
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+
+    const date = new Date(year, month - 1, day);
+    date.setHours(0, 0, 0, 0);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day ||
+      year < 1900 ||
+      date > today
+    ) {
+      return null;
+    }
+
+    return (
+      String(year).padStart(4, "0") + "-" +
+      String(month).padStart(2, "0") + "-" +
+      String(day).padStart(2, "0")
+    );
   }
 
   function startVoice(fieldId) {
@@ -380,6 +409,12 @@
       }
     }
 
+    if (!/^(?:[1-9]|1[01])$/.test(data.grade)) {
+      showError("දහම් පාසල් ශ්‍රේණිය 1 සිට 11 දක්වා නිවැරදි ඉලක්කමක් විය යුතුයි.");
+      document.getElementById("grade").focus();
+      return;
+    }
+
     const phone = data.phone.replace(/\s/g, "");
     if (phone && !/^\d{10}$/.test(phone)) {
       showError("දුරකථන අංකය ඉලක්කම් 10ක් විය යුතුයි.");
@@ -387,16 +422,15 @@
       return;
     }
 
-    const birthDate = new Date(data.dob + "T00:00:00");
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const isoDob = parseBirthDate(data.dob);
 
-    if (isNaN(birthDate.getTime()) || birthDate > today) {
-      showError("වලංගු උපන් දිනයක් ඇතුළත් කරන්න.");
+    if (!isoDob) {
+      showError("උපන් දිනය YYYY/MM/DD ආකාරයට නිවැරදිව ඇතුළත් කරන්න. උදා: 2015/07/09");
+      document.getElementById("dob").focus();
       return;
     }
 
-    currentData = data;
+    currentData = {...data, isoDob: isoDob};
 
     const labels = {
       fatherName: "පියාගේ නම",
@@ -442,9 +476,9 @@
   }
 
   function confirmRegistration() {
-    if (!currentData) return;
+    if (!currentData || pendingRequestId) return;
 
-    if (!confirm("ඇතුළත් කළ තොරතුරු නිවැරදි බව තහවුරු කර ලියාපදිංචි කිරීමට කැමතිද?")) {
+    if (!confirm("ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව සහතික කර ලියාපදිංචි ඉල්ලීම ඉදිරිපත් කරනවාද?")) {
       return;
     }
 
@@ -457,7 +491,17 @@
         ? crypto.randomUUID()
         : String(Date.now()) + String(Math.random()).slice(2);
 
-    const submission = {...currentData, requestId: pendingRequestId};
+    const submission = {
+      fatherName: currentData.fatherName,
+      motherName: currentData.motherName,
+      address: currentData.address,
+      phone: currentData.phone,
+      childName: currentData.childName,
+      school: currentData.school,
+      grade: currentData.grade,
+      dob: currentData.isoDob,
+      requestId: pendingRequestId
+    };
 
     document.getElementById("payload").value =
       JSON.stringify(submission);
@@ -468,7 +512,7 @@
       if (pendingRequestId) {
         pendingRequestId = null;
         button.disabled = false;
-        button.textContent = "නැවත උත්සාහ කිරීමට පෙර පරීක්ෂා කරන්න";
+        button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
         alert(
           "පද්ධතියෙන් පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
           "දත්ත සුරැකී තිබිය හැකි නිසා නැවත යැවීමට පෙර පාලක මණ්ඩලයෙන් පරීක්ෂා කරගන්න."
@@ -489,7 +533,7 @@
 
     const button = document.getElementById("confirmButton");
     button.disabled = false;
-    button.textContent = "තොරතුරු නිවැරදියි - ලියාපදිංචි කරන්න";
+    button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
 
     if (event.data.success) {
       document.getElementById("reviewSection").classList.add("hidden");
@@ -519,14 +563,19 @@
   }
 
   document.getElementById("phone").addEventListener("input", function() {
-    let digits = this.value.replace(/\D/g, "").slice(0, 10);
+    const digits = this.value.replace(/\D/g, "").slice(0, 10);
+
+    let formatted = digits.slice(0, 3);
+
     if (digits.length > 3) {
-      digits = digits.slice(0, 3) + " " + digits.slice(3);
+      formatted += " " + digits.slice(3, 6);
     }
-    if (digits.length > 7) {
-      digits = digits.slice(0, 7) + " " + digits.slice(7);
+
+    if (digits.length > 6) {
+      formatted += " " + digits.slice(6, 10);
     }
-    this.value = digits;
+
+    this.value = formatted;
   });
 </script>
 
