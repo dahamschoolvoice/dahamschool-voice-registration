@@ -337,7 +337,31 @@
       String(day).padStart(2, "0")
     );
   }
+  
+function formatBirthDate(input) {
+  let digits = input.value.replace(/\D/g, "").slice(0, 8);
 
+  let formatted = digits.slice(0, 4);
+
+  if (digits.length >= 4) {
+    formatted += "/";
+  }
+
+  if (digits.length > 4) {
+    formatted += digits.slice(4, 6);
+  }
+
+  if (digits.length >= 6) {
+    formatted += "/";
+  }
+
+  if (digits.length > 6) {
+    formatted += digits.slice(6, 8);
+  }
+
+  input.value = formatted;
+}
+  
   function startVoice(fieldId) {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
