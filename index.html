@@ -410,24 +410,7 @@ function formatBirthDate(input) {
       voiceMessage.textContent = "මයික්‍රෆෝනය ආරම්භ කළ නොහැක.";
     }
   }
-  
-  // උපන් දිනයේ ඉලක්කම් අතර / ලකුණු ස්වයංක්‍රීයව එකතු කිරීම
-  document.getElementById("dob").addEventListener("input", function() {
-    let digits = this.value.replace(/\D/g, "").slice(0, 8);
-
-    let formatted = digits.slice(0, 4);
-
-    if (digits.length > 4) {
-      formatted += "/" + digits.slice(4, 6);
-    }
-
-    if (digits.length > 6) {
-      formatted += "/" + digits.slice(6, 8);
-    }
-
-    this.value = formatted;
-  });
-  
+    
   function showReview() {
     hideError();
 
