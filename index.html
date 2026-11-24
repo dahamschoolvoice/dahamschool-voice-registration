@@ -135,6 +135,31 @@
       line-height: 1.5;
     }
 
+    .security-box {
+      margin-top: 22px;
+      padding: 15px;
+      background: #f5faf5;
+      border: 1px solid #dce9de;
+      border-radius: 9px;
+    }
+
+    .security-title {
+      font-weight: bold;
+      color: #176b38;
+      margin-bottom: 10px;
+    }
+
+    #turnstileWidget {
+      min-height: 65px;
+    }
+
+    #turnstileMessage {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #725514;
+      margin-top: 8px;
+    }
+
     .hidden { display: none !important; }
 
     .footer {
@@ -215,8 +240,8 @@
     <div class="field">
       <label for="dob">උපන් දිනය *</label>
       <input id="dob" type="text" inputmode="numeric"
-       maxlength="10" placeholder="YYYY/MM/DD"
-       oninput="formatBirthDate(this)">
+             maxlength="10" placeholder="YYYY/MM/DD"
+             oninput="formatBirthDate(this)">
       <div class="small-note">උදාහරණය: 2015/07/09</div>
     </div>
 
@@ -232,6 +257,18 @@
     <p class="small-note">පහත තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.</p>
 
     <div id="reviewDetails"></div>
+
+    <div class="security-box">
+      <div class="security-title">ආරක්ෂක පරීක්ෂාව</div>
+      <p class="small-note">
+        ලියාපදිංචි ඉල්ලීම ඉදිරිපත් කිරීමට පෙර පහත ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.
+      </p>
+
+      <div id="turnstileWidget"></div>
+      <div id="turnstileMessage">
+        Cloudflare ආරක්ෂක පරීක්ෂාව සූදානම් වෙමින් පවතී...
+      </div>
+    </div>
 
     <button class="secondary-button" type="button" onclick="editDetails()">
       නැවත සංශෝධනය කරන්න
@@ -270,10 +307,16 @@
   const SCRIPT_URL =
     "https://script.google.com/macros/s/AKfycbzKo4akOeOt06qU_Dnq0SAsi8qiCO9WW_Bw-KtCCTx7pqt6QBnJ11Ko0gIcey-aOaI9TA/exec";
 
+  const TURNSTILE_SITE_KEY =
+    "0x4AAAAAAGQtTBjbJ_S1l1PF";
+
   let currentData = null;
   let pendingRequestId = null;
   let responseTimer = null;
   let recognition = null;
+
+  let turnstileWidgetId = null;
+  let turnstileToken = null;
 
   const fields = [
     ["fatherName", "පියාගේ නම"],
@@ -303,6 +346,97 @@
 
   function hideError() {
     document.getElementById("errorMessage").style.display = "none";
+  }
+
+  // Cloudflare Turnstile පණිවිඩය
+  function setTurnstileMessage(message) {
+    document.getElementById("turnstileMessage").textContent = message;
+  }
+
+  // Cloudflare ආරක්ෂක Widget එක සකස් කිරීම
+  function setupTurnstile() {
+    if (!window.turnstile) {
+      setTurnstileMessage(
+        "ආරක්ෂක පරීක්ෂාව තවම සූදානම් නැත. මොහොතක් රැඳී සිටින්න."
+      );
+      return;
+    }
+
+    if (turnstileWidgetId !== null) {
+      return;
+    }
+
+    const reviewSection =
+      document.getElementById("reviewSection");
+
+    if (reviewSection.classList.contains("hidden")) {
+      return;
+    }
+
+    try {
+      turnstileWidgetId = window.turnstile.render(
+        "#turnstileWidget",
+        {
+          sitekey: TURNSTILE_SITE_KEY,
+
+          callback: function(token) {
+            turnstileToken = token;
+            setTurnstileMessage(
+              "ආරක්ෂක පරීක්ෂාව සාර්ථකයි. දැන් ලියාපදිංචිය තහවුරු කළ හැකියි."
+            );
+          },
+
+          "expired-callback": function() {
+            turnstileToken = null;
+            setTurnstileMessage(
+              "ආරක්ෂක පරීක්ෂාව කල් ඉකුත් වී ඇත. නැවත පරීක්ෂා කරන්න."
+            );
+          },
+
+          "error-callback": function() {
+            turnstileToken = null;
+            setTurnstileMessage(
+              "ආරක්ෂක පරීක්ෂාවේ දෝෂයක් ඇති වුණා. පිටුව නැවත පරීක්ෂා කරන්න."
+            );
+          }
+        }
+      );
+
+      setTurnstileMessage(
+        "Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න."
+      );
+
+    } catch (error) {
+      turnstileWidgetId = null;
+      turnstileToken = null;
+
+      setTurnstileMessage(
+        "ආරක්ෂක පරීක්ෂාව ආරම්භ කළ නොහැක. පිටුව නැවත විවෘත කරන්න."
+      );
+    }
+  }
+
+  // Cloudflare API එක සූදානම් වූ විට ක්‍රියාත්මක වේ
+  function onTurnstileLoad() {
+    setupTurnstile();
+  }
+
+  function resetTurnstile() {
+    turnstileToken = null;
+
+    if (window.turnstile && turnstileWidgetId !== null) {
+      try {
+        window.turnstile.reset(turnstileWidgetId);
+        setTurnstileMessage(
+          "ආරක්ෂක පරීක්ෂාව නැවත සම්පූර්ණ කරන්න."
+        );
+      } catch (error) {
+        turnstileWidgetId = null;
+        setTurnstileMessage(
+          "ආරක්ෂක පරීක්ෂාව නැවත ආරම්භ කරන්න."
+        );
+      }
+    }
   }
 
   function parseBirthDate(value) {
@@ -337,31 +471,31 @@
       String(day).padStart(2, "0")
     );
   }
-  
-function formatBirthDate(input) {
-  let digits = input.value.replace(/\D/g, "").slice(0, 8);
 
-  let formatted = digits.slice(0, 4);
+  function formatBirthDate(input) {
+    let digits = input.value.replace(/\D/g, "").slice(0, 8);
 
-  if (digits.length >= 4) {
-    formatted += "/";
+    let formatted = digits.slice(0, 4);
+
+    if (digits.length >= 4) {
+      formatted += "/";
+    }
+
+    if (digits.length > 4) {
+      formatted += digits.slice(4, 6);
+    }
+
+    if (digits.length >= 6) {
+      formatted += "/";
+    }
+
+    if (digits.length > 6) {
+      formatted += digits.slice(6, 8);
+    }
+
+    input.value = formatted;
   }
 
-  if (digits.length > 4) {
-    formatted += digits.slice(4, 6);
-  }
-
-  if (digits.length >= 6) {
-    formatted += "/";
-  }
-
-  if (digits.length > 6) {
-    formatted += digits.slice(6, 8);
-  }
-
-  input.value = formatted;
-}
-  
   function startVoice(fieldId) {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -387,9 +521,11 @@ function formatBirthDate(input) {
     recognition.onresult = function(event) {
       const transcript = event.results[0][0].transcript;
       const input = document.getElementById(fieldId);
+
       input.value = input.value
         ? input.value + " " + transcript
         : transcript;
+
       voiceMessage.textContent = "හඬ ආදානය සාර්ථකයි.";
     };
 
@@ -410,7 +546,7 @@ function formatBirthDate(input) {
       voiceMessage.textContent = "මයික්‍රෆෝනය ආරම්භ කළ නොහැක.";
     }
   }
-    
+
   function showReview() {
     hideError();
 
@@ -441,6 +577,7 @@ function formatBirthDate(input) {
     }
 
     const phone = data.phone.replace(/\s/g, "");
+
     if (phone && !/^\d{10}$/.test(phone)) {
       showError("දුරකථන අංකය ඉලක්කම් 10ක් විය යුතුයි.");
       document.getElementById("phone").focus();
@@ -491,17 +628,30 @@ function formatBirthDate(input) {
 
     document.getElementById("entrySection").classList.add("hidden");
     document.getElementById("reviewSection").classList.remove("hidden");
-    document.getElementById("reviewSection").scrollIntoView({behavior: "smooth"});
+
+    setupTurnstile();
+
+    document.getElementById("reviewSection")
+      .scrollIntoView({behavior: "smooth"});
   }
 
   function editDetails() {
+    resetTurnstile();
+
     document.getElementById("reviewSection").classList.add("hidden");
     document.getElementById("entrySection").classList.remove("hidden");
+
     window.scrollTo({top: 0, behavior: "smooth"});
   }
 
   function confirmRegistration() {
     if (!currentData || pendingRequestId) return;
+
+    if (!turnstileToken) {
+      alert("කරුණාකර Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.");
+      setupTurnstile();
+      return;
+    }
 
     if (!confirm("ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව සහතික කර ලියාපදිංචි ඉල්ලීම ඉදිරිපත් කරනවාද?")) {
       return;
@@ -525,7 +675,8 @@ function formatBirthDate(input) {
       school: currentData.school,
       grade: currentData.grade,
       dob: currentData.isoDob,
-      requestId: pendingRequestId
+      requestId: pendingRequestId,
+      turnstileToken: turnstileToken
     };
 
     document.getElementById("payload").value =
@@ -538,6 +689,9 @@ function formatBirthDate(input) {
         pendingRequestId = null;
         button.disabled = false;
         button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
+
+        resetTurnstile();
+
         alert(
           "පද්ධතියෙන් පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
           "දත්ත සුරැකී තිබිය හැකි නිසා නැවත යැවීමට පෙර පාලක මණ්ඩලයෙන් පරීක්ෂා කරගන්න."
@@ -563,11 +717,16 @@ function formatBirthDate(input) {
     if (event.data.success) {
       document.getElementById("reviewSection").classList.add("hidden");
       document.getElementById("resultSection").classList.remove("hidden");
+
       document.getElementById("resultMessage").textContent =
         event.data.message ||
         "තොරතුරු සාර්ථකව ලැබුණා. පාලක මණ්ඩලයේ අනුමැතිය බලාපොරොත්තු වන්න.";
+
     } else {
+      resetTurnstile();
+
       document.getElementById("reviewSection").classList.remove("hidden");
+
       alert(event.data.message || "තොරතුරු සුරැකීමේදී දෝෂයක් ඇති වුණා.");
     }
   });
@@ -578,10 +737,20 @@ function formatBirthDate(input) {
     });
 
     currentData = null;
+    turnstileToken = null;
+
+    if (window.turnstile && turnstileWidgetId !== null) {
+      try {
+        window.turnstile.reset(turnstileWidgetId);
+      } catch (error) {
+        turnstileWidgetId = null;
+      }
+    }
 
     document.getElementById("resultSection").classList.add("hidden");
     document.getElementById("entrySection").classList.remove("hidden");
     document.getElementById("voiceMessage").style.display = "none";
+
     hideError();
 
     window.scrollTo({top: 0, behavior: "smooth"});
@@ -602,6 +771,11 @@ function formatBirthDate(input) {
 
     this.value = formatted;
   });
+</script>
+
+<script
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"
+  async defer>
 </script>
 
 </body>
