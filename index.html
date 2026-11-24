@@ -4,188 +4,531 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>සිංහල හඬ පරීක්ෂාව</title>
+  <title>බෝධිරාජ දහම් පාසල - ශිෂ්‍ය ලියාපදිංචිය</title>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
+      margin: 0;
+      padding: 20px 12px;
       font-family: Arial, sans-serif;
-      background: #f1f5f2;
-      padding: 20px;
-      text-align: center;
+      background: #eef5ed;
+      color: #24352a;
     }
 
     .container {
-      max-width: 550px;
-      margin: 30px auto;
-      padding: 25px;
+      max-width: 650px;
+      margin: auto;
       background: white;
-      border-radius: 15px;
-      box-shadow: 0 3px 12px #0002;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 3px 16px rgba(0,0,0,.10);
     }
 
-    h2 {
-      color: #176b3a;
+    h1 {
+      text-align: center;
+      color: #176b38;
+      font-size: 25px;
+      margin: 5px 0;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #52675a;
+      margin: 8px 0 25px;
+    }
+
+    .field { margin-bottom: 17px; }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #b8c8bc;
+      border-radius: 7px;
+      font-size: 16px;
+      background: white;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid #80b994;
+      border-color: #247b45;
+    }
+
+    .voice-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .voice-row input { flex: 1; min-width: 0; }
+
+    .voice-button {
+      border: 0;
+      border-radius: 7px;
+      background: #e2f2e6;
+      color: #176b38;
+      padding: 0 13px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
     button {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      margin: 15px 0;
-      border: none;
-      border-radius: 9px;
-      background: #176b3a;
-      color: white;
-      font-size: 17px;
       cursor: pointer;
-    }
-
-    button:disabled {
-      background: #999;
-    }
-
-    #result {
-      min-height: 65px;
-      padding: 15px;
-      background: #f1f5f2;
+      border: 0;
       border-radius: 8px;
-      font-size: 18px;
-      text-align: left;
+      padding: 13px 18px;
+      font-size: 16px;
+      font-weight: bold;
     }
 
-    #status {
-      color: #176b3a;
-      margin-top: 15px;
+    .main-button {
+      width: 100%;
+      background: #19733d;
+      color: white;
+      margin-top: 12px;
+    }
+
+    .secondary-button {
+      background: #e5eee7;
+      color: #245b36;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .message {
+      display: none;
+      padding: 13px;
+      border-radius: 8px;
+      margin: 15px 0;
+      line-height: 1.6;
+    }
+
+    .error { background: #ffeded; color: #a32222; }
+    .success { background: #e6f5e9; color: #176b38; }
+    .info { background: #fff6dc; color: #725514; }
+
+    .review-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #e5eae6;
+      line-height: 1.6;
+    }
+
+    .review-item strong { color: #176b38; }
+
+    .small-note {
+      font-size: 13px;
+      color: #647267;
+      line-height: 1.5;
+    }
+
+    .hidden { display: none !important; }
+
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #718075;
+      margin-top: 22px;
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
 
-    <h2>සිංහල හඬ පරීක්ෂාව</h2>
+<div class="container">
 
-    <p>දහම් පාසල් ශිෂ්‍ය ලියාපදිංචි පද්ධතිය</p>
+  <h1>බෝධිරාජ දහම් පාසල</h1>
+  <div class="subtitle">ශිෂ්‍ය ලියාපදිංචි කිරීමේ පද්ධතිය</div>
 
-    <button onclick="testVoice()">
-      🔊 සිංහල හඬ පරීක්ෂා කරන්න
-    </button>
+  <div id="entrySection">
 
-    <button onclick="startListening()">
-      🎤 කතා කිරීම ආරම්භ කරන්න
-    </button>
+    <div class="message error" id="errorMessage"></div>
+    <div class="message info" id="voiceMessage"></div>
 
-    <button onclick="stopListening()">
-      ⏹️ නවත්වන්න
-    </button>
-
-    <h3>ඔබ පැවසූ වචන</h3>
-
-    <div id="result">
-      මෙතැන ඔබේ කතාව දිස්වේවි.
+    <div class="field">
+      <label for="fatherName">පියාගේ නම *</label>
+      <div class="voice-row">
+        <input id="fatherName" type="text" placeholder="පියාගේ සම්පූර්ණ නම">
+        <button class="voice-button" type="button" onclick="startVoice('fatherName')">🎤 හඬ</button>
+      </div>
     </div>
 
-    <p id="status">පරීක්ෂාවට සූදානම්.</p>
+    <div class="field">
+      <label for="motherName">මවගේ නම *</label>
+      <div class="voice-row">
+        <input id="motherName" type="text" placeholder="මවගේ සම්පූර්ණ නම">
+        <button class="voice-button" type="button" onclick="startVoice('motherName')">🎤 හඬ</button>
+      </div>
+    </div>
 
+    <div class="field">
+      <label for="address">ලිපිනය *</label>
+      <div class="voice-row">
+        <input id="address" type="text" placeholder="ස්ථිර ලිපිනය">
+        <button class="voice-button" type="button" onclick="startVoice('address')">🎤 හඬ</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="phone">WhatsApp දුරකථන අංකය</label>
+      <input id="phone" type="tel" inputmode="numeric"
+             maxlength="12" placeholder="07X XXX XXXX">
+      <div class="small-note">දුරකථන අංකය ඇතුළත් කිරීම අනිවාර්ය නොවේ.</div>
+    </div>
+
+    <div class="field">
+      <label for="childName">දරුවාගේ සම්පූර්ණ නම *</label>
+      <div class="voice-row">
+        <input id="childName" type="text" placeholder="දරුවාගේ සම්පූර්ණ නම">
+        <button class="voice-button" type="button" onclick="startVoice('childName')">🎤 හඬ</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="school">ඉගෙනුම ලබන පාසල *</label>
+      <div class="voice-row">
+        <input id="school" type="text" placeholder="පාසලේ නම">
+        <button class="voice-button" type="button" onclick="startVoice('school')">🎤 හඬ</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
+      <select id="grade">
+        <option value="">ශ්‍රේණිය තෝරන්න</option>
+        <option value="1">1 ශ්‍රේණිය</option>
+        <option value="2">2 ශ්‍රේණිය</option>
+        <option value="3">3 ශ්‍රේණිය</option>
+        <option value="4">4 ශ්‍රේණිය</option>
+        <option value="5">5 ශ්‍රේණිය</option>
+        <option value="6">6 ශ්‍රේණිය</option>
+        <option value="7">7 ශ්‍රේණිය</option>
+        <option value="8">8 ශ්‍රේණිය</option>
+        <option value="9">9 ශ්‍රේණිය</option>
+        <option value="10">10 ශ්‍රේණිය</option>
+        <option value="11">11 ශ්‍රේණිය</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="dob">උපන් දිනය *</label>
+      <input id="dob" type="date">
+    </div>
+
+    <button class="main-button" type="button" onclick="showReview()">
+      තොරතුරු පරීක්ෂා කරන්න
+    </button>
+
+    <p class="small-note">* ලකුණෙන් දක්වා ඇති තොරතුරු අනිවාර්ය වේ.</p>
   </div>
 
-  <script>
-    function testVoice() {
-      if (!("speechSynthesis" in window)) {
-        document.getElementById("status").textContent =
-          "මෙම බ්‍රවුසරයේ හඬ කියවීම පහසුකම නැහැ.";
-        return;
-      }
+  <div id="reviewSection" class="hidden">
+    <h3>ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
+    <p class="small-note">පහත තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.</p>
 
-      const voices = speechSynthesis.getVoices();
+    <div id="reviewDetails"></div>
 
-      const sinhalaVoices = voices.filter(v =>
-        v.lang.toLowerCase().startsWith("si")
-      );
+    <button class="secondary-button" type="button" onclick="editDetails()">
+      නැවත සංශෝධනය කරන්න
+    </button>
 
-      if (sinhalaVoices.length === 0) {
-        document.getElementById("status").textContent =
-          "සිංහල හඬක් පරිගණකයේ දැනට සොයාගත නොහැක.";
-        return;
-      }
+    <button class="main-button" id="confirmButton" type="button"
+            onclick="confirmRegistration()">
+      තොරතුරු නිවැරදියි - ලියාපදිංචි කරන්න
+    </button>
+  </div>
 
-      const voice = sinhalaVoices.find(v =>
-        /female|woman|zira/i.test(v.name)
-      ) || sinhalaVoices[0];
+  <div id="resultSection" class="hidden">
+    <div class="message success" id="resultMessage"></div>
+    <button class="main-button" type="button" onclick="newRegistration()">
+      තවත් දරුවෙකු ලියාපදිංචි කරන්න
+    </button>
+  </div>
 
-      const message = new SpeechSynthesisUtterance(
-        "ආයුබෝවන්! දහම් පාසල් ශිෂ්‍ය ලියාපදිංචි පද්ධතියට ඔබ සාදරයෙන් පිළිගනිමු."
-      );
+  <div class="footer">
+    බෝධිරාජ දහම් පාසල
+  </div>
 
-      message.lang = "si-LK";
-      message.voice = voice;
-      message.rate = 0.9;
+</div>
 
-      speechSynthesis.cancel();
-      speechSynthesis.speak(message);
+<!-- Google Apps Script වෙත දත්ත යැවීම සඳහා සැඟවූ iframe සහ form -->
+<iframe name="googleSheetFrame" id="googleSheetFrame"
+        style="display:none"></iframe>
 
-      document.getElementById("status").textContent =
-        "හඬ පරීක්ෂා කරමින් පවතී: " + voice.name;
+<form id="googleSheetForm" method="POST"
+      target="googleSheetFrame"
+      action="https://script.google.com/macros/s/AKfycbzKo4akOeOt06qU_Dnq0SAsi8qiCO9WW_Bw-KtCCTx7pqt6QBnJ11Ko0gIcey-aOaI9TA/exec"
+      style="display:none">
+  <input type="hidden" name="payload" id="payload">
+</form>
+
+<script>
+  const SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbzKo4akOeOt06qU_Dnq0SAsi8qiCO9WW_Bw-KtCCTx7pqt6QBnJ11Ko0gIcey-aOaI9TA/exec";
+
+  let currentData = null;
+  let pendingRequestId = null;
+  let responseTimer = null;
+  let recognition = null;
+
+  const fields = [
+    ["fatherName", "පියාගේ නම"],
+    ["motherName", "මවගේ නම"],
+    ["address", "ලිපිනය"],
+    ["phone", "WhatsApp දුරකථන අංකය"],
+    ["childName", "දරුවාගේ නම"],
+    ["school", "පාසල"],
+    ["grade", "ශ්‍රේණිය"],
+    ["dob", "උපන් දිනය"]
+  ];
+
+  function getFormData() {
+    const data = {};
+    fields.forEach(([id]) => {
+      data[id] = document.getElementById(id).value.trim();
+    });
+    return data;
+  }
+
+  function showError(message) {
+    const box = document.getElementById("errorMessage");
+    box.textContent = message;
+    box.style.display = "block";
+    box.scrollIntoView({behavior: "smooth", block: "center"});
+  }
+
+  function hideError() {
+    document.getElementById("errorMessage").style.display = "none";
+  }
+
+  function startVoice(fieldId) {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("මෙම බ්‍රවුසරයේ හඬ ආදාන පහසුකම නොමැත. කරුණාකර Chrome භාවිත කරන්න.");
+      return;
     }
 
-    let recognition;
+    if (recognition) {
+      try { recognition.stop(); } catch (e) {}
+    }
 
-    function startListening() {
-      const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = "si-LK";
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-      if (!SpeechRecognition) {
-        document.getElementById("status").textContent =
-          "මෙම බ්‍රවුසරයේ හඬ හඳුනාගැනීම පහසුකම නැහැ.";
+    const voiceMessage = document.getElementById("voiceMessage");
+    voiceMessage.textContent = "ඔබගේ කටහඬට සවන් දෙමින් සිටී...";
+    voiceMessage.style.display = "block";
+
+    recognition.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      const input = document.getElementById(fieldId);
+      input.value = input.value
+        ? input.value + " " + transcript
+        : transcript;
+      voiceMessage.textContent = "හඬ ආදානය සාර්ථකයි.";
+    };
+
+    recognition.onerror = function(event) {
+      voiceMessage.textContent =
+        "හඬ ආදානයේ දෝෂයක්: " + event.error;
+    };
+
+    recognition.onend = function() {
+      if (voiceMessage.textContent === "ඔබගේ කටහඬට සවන් දෙමින් සිටී...") {
+        voiceMessage.textContent = "හඬ ආදානය අවසන් විය.";
+      }
+    };
+
+    try {
+      recognition.start();
+    } catch (error) {
+      voiceMessage.textContent = "මයික්‍රෆෝනය ආරම්භ කළ නොහැක.";
+    }
+  }
+
+  function showReview() {
+    hideError();
+
+    const data = getFormData();
+
+    const required = [
+      ["fatherName", "පියාගේ නම"],
+      ["motherName", "මවගේ නම"],
+      ["address", "ලිපිනය"],
+      ["childName", "දරුවාගේ නම"],
+      ["school", "පාසල"],
+      ["grade", "ශ්‍රේණිය"],
+      ["dob", "උපන් දිනය"]
+    ];
+
+    for (const [id, label] of required) {
+      if (!data[id]) {
+        showError(label + " ඇතුළත් කරන්න.");
+        document.getElementById(id).focus();
         return;
       }
-
-      recognition = new SpeechRecognition();
-      recognition.lang = "si-LK";
-      recognition.continuous = false;
-      recognition.interimResults = false;
-
-      recognition.onstart = function() {
-        document.getElementById("status").textContent =
-          "දැන් කතා කරන්න...";
-      };
-
-      recognition.onresult = function(event) {
-        const spokenText =
-          event.results[0][0].transcript;
-
-        document.getElementById("result").textContent =
-          spokenText;
-
-        document.getElementById("status").textContent =
-          "ඔබේ කතාව හඳුනාගත්තා.";
-      };
-
-      recognition.onerror = function(event) {
-        document.getElementById("status").textContent =
-          "දෝෂයක්: " + event.error;
-      };
-
-      recognition.onend = function() {
-        document.getElementById("status").textContent +=
-          " පරීක්ෂාව අවසන්.";
-      };
-
-      try {
-        recognition.start();
-      } catch (error) {
-        document.getElementById("status").textContent =
-          "මයික්‍රෆෝනය ආරම්භ කිරීමේ දෝෂයක්.";
-      }
     }
 
-    function stopListening() {
-      if (recognition) {
-        recognition.stop();
-      }
+    const phone = data.phone.replace(/\s/g, "");
+    if (phone && !/^\d{10}$/.test(phone)) {
+      showError("දුරකථන අංකය ඉලක්කම් 10ක් විය යුතුයි.");
+      document.getElementById("phone").focus();
+      return;
     }
-  </script>
+
+    const birthDate = new Date(data.dob + "T00:00:00");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (isNaN(birthDate.getTime()) || birthDate > today) {
+      showError("වලංගු උපන් දිනයක් ඇතුළත් කරන්න.");
+      return;
+    }
+
+    currentData = data;
+
+    const labels = {
+      fatherName: "පියාගේ නම",
+      motherName: "මවගේ නම",
+      address: "ලිපිනය",
+      phone: "WhatsApp අංකය",
+      childName: "දරුවාගේ නම",
+      school: "පාසල",
+      grade: "දහම් පාසල් ශ්‍රේණිය",
+      dob: "උපන් දිනය"
+    };
+
+    const review = document.getElementById("reviewDetails");
+    review.replaceChildren();
+
+    fields.forEach(([id]) => {
+      const item = document.createElement("div");
+      item.className = "review-item";
+
+      const strong = document.createElement("strong");
+      strong.textContent = labels[id] + ": ";
+
+      const value = document.createElement("span");
+      value.textContent =
+        id === "grade"
+          ? data[id] + " ශ්‍රේණිය"
+          : (data[id] || "ඇතුළත් කර නැත");
+
+      item.appendChild(strong);
+      item.appendChild(value);
+      review.appendChild(item);
+    });
+
+    document.getElementById("entrySection").classList.add("hidden");
+    document.getElementById("reviewSection").classList.remove("hidden");
+    document.getElementById("reviewSection").scrollIntoView({behavior: "smooth"});
+  }
+
+  function editDetails() {
+    document.getElementById("reviewSection").classList.add("hidden");
+    document.getElementById("entrySection").classList.remove("hidden");
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+
+  function confirmRegistration() {
+    if (!currentData) return;
+
+    if (!confirm("ඇතුළත් කළ තොරතුරු නිවැරදි බව තහවුරු කර ලියාපදිංචි කිරීමට කැමතිද?")) {
+      return;
+    }
+
+    const button = document.getElementById("confirmButton");
+    button.disabled = true;
+    button.textContent = "තොරතුරු යවමින් පවතී...";
+
+    pendingRequestId =
+      (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : String(Date.now()) + String(Math.random()).slice(2);
+
+    const submission = {...currentData, requestId: pendingRequestId};
+
+    document.getElementById("payload").value =
+      JSON.stringify(submission);
+
+    document.getElementById("googleSheetForm").submit();
+
+    responseTimer = setTimeout(function() {
+      if (pendingRequestId) {
+        pendingRequestId = null;
+        button.disabled = false;
+        button.textContent = "නැවත උත්සාහ කිරීමට පෙර පරීක්ෂා කරන්න";
+        alert(
+          "පද්ධතියෙන් පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
+          "දත්ත සුරැකී තිබිය හැකි නිසා නැවත යැවීමට පෙර පාලක මණ්ඩලයෙන් පරීක්ෂා කරගන්න."
+        );
+      }
+    }, 45000);
+  }
+
+  window.addEventListener("message", function(event) {
+    const iframe = document.getElementById("googleSheetFrame");
+
+    if (event.source !== iframe.contentWindow) return;
+    if (!event.data || typeof event.data !== "object") return;
+    if (!pendingRequestId || event.data.requestId !== pendingRequestId) return;
+
+    clearTimeout(responseTimer);
+    pendingRequestId = null;
+
+    const button = document.getElementById("confirmButton");
+    button.disabled = false;
+    button.textContent = "තොරතුරු නිවැරදියි - ලියාපදිංචි කරන්න";
+
+    if (event.data.success) {
+      document.getElementById("reviewSection").classList.add("hidden");
+      document.getElementById("resultSection").classList.remove("hidden");
+      document.getElementById("resultMessage").textContent =
+        event.data.message ||
+        "තොරතුරු සාර්ථකව ලැබුණා. පාලක මණ්ඩලයේ අනුමැතිය බලාපොරොත්තු වන්න.";
+    } else {
+      document.getElementById("reviewSection").classList.remove("hidden");
+      alert(event.data.message || "තොරතුරු සුරැකීමේදී දෝෂයක් ඇති වුණා.");
+    }
+  });
+
+  function newRegistration() {
+    fields.forEach(([id]) => {
+      document.getElementById(id).value = "";
+    });
+
+    currentData = null;
+
+    document.getElementById("resultSection").classList.add("hidden");
+    document.getElementById("entrySection").classList.remove("hidden");
+    document.getElementById("voiceMessage").style.display = "none";
+    hideError();
+
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+
+  document.getElementById("phone").addEventListener("input", function() {
+    let digits = this.value.replace(/\D/g, "").slice(0, 10);
+    if (digits.length > 3) {
+      digits = digits.slice(0, 3) + " " + digits.slice(3);
+    }
+    if (digits.length > 7) {
+      digits = digits.slice(0, 7) + " " + digits.slice(7);
+    }
+    this.value = digits;
+  });
+</script>
 
 </body>
 </html>
