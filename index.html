@@ -766,12 +766,23 @@
     }, 45000);
   }
 
+  // Apps Script ප්‍රතිචාරය ලබාගැනීම.
+  // event.source පරීක්ෂාව ඉවත් කර Google origin එක පරීක්ෂා කරයි.
+  // requestId එක ගැළපීම අනිවාර්ය වේ.
   window.addEventListener("message", function(event) {
-    const iframe = document.getElementById("googleSheetFrame");
 
-    if (event.source !== iframe.contentWindow) return;
+    const isTrustedGoogleOrigin =
+      event.origin === "https://script.google.com" ||
+      event.origin.endsWith(".googleusercontent.com");
+
+    if (!isTrustedGoogleOrigin) return;
+
     if (!event.data || typeof event.data !== "object") return;
-    if (!pendingRequestId || event.data.requestId !== pendingRequestId) return;
+
+    if (
+      !pendingRequestId ||
+      event.data.requestId !== pendingRequestId
+    ) return;
 
     clearTimeout(responseTimer);
     pendingRequestId = null;
