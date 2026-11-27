@@ -856,21 +856,7 @@
     window.scrollTo({top: 0, behavior: "smooth"});
   }
 
-  document.getElementById("phone").addEventListener("input", function() {
-    const digits = this.value.replace(/\D/g, "").slice(0, 10);
-
-    let formatted = digits.slice(0, 3);
-
-    if (digits.length > 3) {
-      formatted += " " + digits.slice(3, 6);
-    }
-
-    if (digits.length > 6) {
-      formatted += " " + digits.slice(6, 10);
-    }
-
-    this.value = formatted;
-  });
+  
 </script>
 
 <script
