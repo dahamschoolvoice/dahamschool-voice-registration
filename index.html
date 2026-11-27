@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="si">
 <head>
@@ -106,13 +105,6 @@
       color: #245b36;
       margin-top: 10px;
       width: 100%;
-    }
-
-    .test-button {
-      background: #315f91;
-      color: white;
-      width: 100%;
-      margin-top: 12px;
     }
 
     .message {
@@ -274,22 +266,13 @@
     <div class="security-box">
       <div class="security-title">ආරක්ෂක පරීක්ෂාව</div>
       <p class="small-note">
-        ලියාපදිංචි ඉල්ලීම ඉදිරිපත් කිරීමට පෙර පහත ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.
+        ඉල්ලීම පරීක්ෂා කිරීම සඳහා පෙර පහත Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.
       </p>
 
       <div id="turnstileWidget"></div>
       <div id="turnstileMessage">
         Cloudflare ආරක්ෂක පරීක්ෂාව සූදානම් වෙමින් පවතී...
       </div>
-
-      <button class="test-button" id="testButton" type="button"
-              onclick="testTurnstileOnly()">
-        ආරක්ෂක පරීක්ෂාව පමණක් තහවුරු කරන්න
-      </button>
-
-      <p class="small-note">
-        මෙය තාවකාලික පරීක්ෂණ බොත්තමකි. මෙයින් ශිෂ්‍ය තොරතුරු ලියාපදිංචි නොවේ.
-      </p>
     </div>
 
     <button class="secondary-button" type="button" onclick="editDetails()">
@@ -304,13 +287,13 @@
 
   <div id="resultSection" class="hidden">
     <div class="message success" id="resultMessage"></div>
-    <button class="main-button" type="button" onclick="newRegistration()">
-      තවත් දරුවෙකු ලියාපදිංචි කරන්න
+    <button class="main-button" id="resultButton" type="button" onclick="newRegistration()">
+      නැවත පෝරමයට යන්න
     </button>
   </div>
 
   <div class="footer">
-    බෝධිරාජ දහම් පාසල
+    ශ්‍රී බෝධිරාජ දහම් පාසල
   </div>
 
 </div>
@@ -336,7 +319,6 @@
   let pendingRequestId = null;
   let responseTimer = null;
   let recognition = null;
-  let pendingTestOnly = false;
 
   let turnstileWidgetId = null;
   let turnstileToken = null;
@@ -403,7 +385,7 @@
           callback: function(token) {
             turnstileToken = token;
             setTurnstileMessage(
-              "ආරක්ෂක පරීක්ෂාව සාර්ථකයි. දැන් පරීක්ෂණය කළ හැකියි."
+              "ආරක්ෂක පරීක්ෂාව සාර්ථකයි. දැන් ඉල්ලීම පරීක්ෂා කළ හැකියි."
             );
           },
 
@@ -664,56 +646,6 @@
     window.scrollTo({top: 0, behavior: "smooth"});
   }
 
-  // Cloudflare Token එක පමණක් පරීක්ෂා කිරීම.
-  // මෙයින් saveRegistration() ක්‍රියාත්මක නොවේ.
-  function testTurnstileOnly() {
-    if (pendingRequestId) return;
-
-    if (!turnstileToken) {
-      alert("කරුණාකර Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.");
-      setupTurnstile();
-      return;
-    }
-
-    const button = document.getElementById("testButton");
-    button.disabled = true;
-    button.textContent = "ආරක්ෂක පරීක්ෂාව සිදු කරමින්...";
-
-    pendingTestOnly = true;
-
-    pendingRequestId =
-      (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : String(Date.now()) + String(Math.random()).slice(2);
-
-    const testPayload = {
-      requestId: pendingRequestId,
-      turnstileToken: turnstileToken,
-      testOnly: true
-    };
-
-    document.getElementById("payload").value =
-      JSON.stringify(testPayload);
-
-    document.getElementById("googleSheetForm").submit();
-
-    responseTimer = setTimeout(function() {
-      if (pendingRequestId) {
-        pendingRequestId = null;
-        pendingTestOnly = false;
-        button.disabled = false;
-        button.textContent = "ආරක්ෂක පරීක්ෂාව පමණක් තහවුරු කරන්න";
-
-        resetTurnstile();
-
-        alert(
-          "පරීක්ෂණයට පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
-          "කිසිදු ලියාපදිංචියක් සිදු කිරීමට උත්සාහ නොකරන්න."
-        );
-      }
-    }, 45000);
-  }
-
   function confirmRegistration() {
     if (!currentData || pendingRequestId) return;
 
@@ -723,15 +655,13 @@
       return;
     }
 
-    if (!confirm("ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව සහතික කර ලියාපදිංචි ඉල්ලීම ඉදිරිපත් කරනවාද?")) {
+    if (!confirm("ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව සහතික කර පරීක්ෂණ ඉල්ලීම ඉදිරිපත් කරනවාද?")) {
       return;
     }
 
     const button = document.getElementById("confirmButton");
     button.disabled = true;
-    button.textContent = "තොරතුරු යවමින් පවතී...";
-
-    pendingTestOnly = false;
+    button.textContent = "තොරතුරු පරීක්ෂා කරමින් පවතී...";
 
     pendingRequestId =
       (window.crypto && crypto.randomUUID)
@@ -766,23 +696,18 @@
 
         alert(
           "පද්ධතියෙන් පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
-          "දත්ත සුරැකී තිබිය හැකි නිසා නැවත යැවීමට පෙර පාලක මණ්ඩලයෙන් පරීක්ෂා කරගන්න."
+          "පරීක්ෂණ ප්‍රතිඵලය නොලැබුණු නිසා නැවත යැවීමට පෙර පාලක මණ්ඩලය සමඟ තහවුරු කරගන්න."
         );
       }
     }, 45000);
   }
 
-  // Apps Script ප්‍රතිචාරය ලබාගැනීම.
-  // event.source පරීක්ෂාව ඉවත් කර Google origin එක පරීක්ෂා කරයි.
-  // requestId එක ගැළපීම අනිවාර්ය වේ.
   window.addEventListener("message", function(event) {
-
     const isTrustedGoogleOrigin =
       event.origin === "https://script.google.com" ||
       event.origin.endsWith(".googleusercontent.com");
 
     if (!isTrustedGoogleOrigin) return;
-
     if (!event.data || typeof event.data !== "object") return;
 
     if (
@@ -793,47 +718,42 @@
     clearTimeout(responseTimer);
     pendingRequestId = null;
 
-    if (pendingTestOnly) {
-      pendingTestOnly = false;
-
-      const testButton = document.getElementById("testButton");
-      testButton.disabled = false;
-      testButton.textContent = "ආරක්ෂක පරීක්ෂාව පමණක් තහවුරු කරන්න";
-
-      if (event.data.success && event.data.testOnly === true) {
-        resetTurnstile();
-        setTurnstileMessage(
-          "සාර්ථකයි! Apps Script එක Cloudflare Token එක නිවැරදිව තහවුරු කළා. පරීක්ෂණය පමණයි; ශිෂ්‍ය තොරතුරු සුරැකුවේ නැත. නැවත පරීක්ෂා කිරීමට අලුත් ආරක්ෂක පරීක්ෂාවක් සම්පූර්ණ කරන්න."
-        );
-      } else {
-        resetTurnstile();
-        alert(
-          event.data.message ||
-          "Cloudflare Token පරීක්ෂාව අසාර්ථක වුණා."
-        );
-      }
-
-      return;
-    }
-
     const button = document.getElementById("confirmButton");
     button.disabled = false;
     button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
 
-    if (event.data.success) {
+    if (event.data.testMode === true) {
       document.getElementById("reviewSection").classList.add("hidden");
       document.getElementById("resultSection").classList.remove("hidden");
 
       document.getElementById("resultMessage").textContent =
         event.data.message ||
-        "තොරතුරු සාර්ථකව ලැබුණා. පාලක මණ්ඩලයේ අනුමැතිය බලාපොරොත්තු වන්න.";
+        "පරීක්ෂණය සාර්ථකයි. තොරතුරු නිවැරදියි. පරීක්ෂණ මාදිලිය නිසා කිසිදු ශිෂ්‍ය තොරතුරක් Sheet එකට සුරැකුවේ නැත.";
+
+      document.getElementById("resultButton").textContent =
+        "නැවත පෝරමයට යන්න";
+
+      turnstileToken = null;
+      return;
+    }
+
+    if (event.data.success === true) {
+      document.getElementById("reviewSection").classList.add("hidden");
+      document.getElementById("resultSection").classList.remove("hidden");
+
+      document.getElementById("resultMessage").textContent =
+        event.data.message ||
+        "ලියාපදිංචි ඉල්ලීම සාර්ථකව ලැබුණා. පාලක මණ්ඩලයේ අනුමැතිය බලාපොරොත්තු වන්න.";
+
+      document.getElementById("resultButton").textContent =
+        "තවත් දරුවෙකු ලියාපදිංචි කරන්න";
 
     } else {
       resetTurnstile();
 
       document.getElementById("reviewSection").classList.remove("hidden");
 
-      alert(event.data.message || "තොරතුරු සුරැකීමේදී දෝෂයක් ඇති වුණා.");
+      alert(event.data.message || "තොරතුරු පරීක්ෂා කිරීමේදී දෝෂයක් ඇති වුණා.");
     }
   });
 
@@ -844,16 +764,19 @@
 
     currentData = null;
     turnstileToken = null;
+    pendingRequestId = null;
 
     if (window.turnstile && turnstileWidgetId !== null) {
       try {
-        window.turnstile.reset(turnstileWidgetId);
-      } catch (error) {
-        turnstileWidgetId = null;
-      }
+        window.turnstile.remove(turnstileWidgetId);
+      } catch (error) {}
     }
 
+    turnstileWidgetId = null;
+    document.getElementById("turnstileWidget").replaceChildren();
+
     document.getElementById("resultSection").classList.add("hidden");
+    document.getElementById("reviewSection").classList.add("hidden");
     document.getElementById("entrySection").classList.remove("hidden");
     document.getElementById("voiceMessage").style.display = "none";
 
@@ -861,26 +784,26 @@
 
     window.scrollTo({top: 0, behavior: "smooth"});
   }
-function formatPhone(input) {
-  let digits = input.value.replace(/\D/g, "").slice(0, 10);
 
-  let formatted = digits.slice(0, 3);
+  function formatPhone(input) {
+    let digits = input.value.replace(/\D/g, "").slice(0, 10);
 
-  if (digits.length > 3) {
-    formatted += " " + digits.slice(3, 6);
+    let formatted = digits.slice(0, 3);
+
+    if (digits.length > 3) {
+      formatted += " " + digits.slice(3, 6);
+    }
+
+    if (digits.length > 6) {
+      formatted += " " + digits.slice(6, 10);
+    }
+
+    input.value = formatted;
   }
 
-  if (digits.length > 6) {
-    formatted += " " + digits.slice(6, 10);
+  function formatGrade(input) {
+    input.value = input.value.replace(/\D/g, "").slice(0, 2);
   }
-
-  input.value = formatted;
-}
-
-function formatGrade(input) {
-  input.value = input.value.replace(/\D/g, "").slice(0, 2);
-}
-  
 </script>
 
 <script
