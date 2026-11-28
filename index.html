@@ -2,724 +2,307 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ශ්‍රී බෝධිරාජ දහම් පාසල - ශිෂ්‍ය ලියාපදිංචිය</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 20px 12px;
-      font-family: Arial, sans-serif;
-      background: #eef5ed;
-      color: #24352a;
-    }
-
-    .container {
-      max-width: 650px;
-      margin: auto;
-      background: #ffffff;
-      padding: 25px;
-      border: 2px solid #b8cbd8;
-      border-radius: 14px;
-      box-shadow: 0 4px 18px rgba(36, 53, 42, 0.08);
-    }
-
-    h1 {
-      text-align: center;
-      color: #176b38;
-      font-size: 25px;
-      margin: 5px 0;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #52675a;
-      margin: 8px 0 25px;
-    }
-
-    .field { margin-bottom: 17px; }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #b8c8bc;
-      border-radius: 7px;
-      font-size: 16px;
-      background: white;
-    }
-
-    input:focus {
-      outline: 2px solid #80b994;
-      border-color: #247b45;
-    }
-
-    .voice-row {
-      display: flex;
-      gap: 8px;
-    }
-
-    .voice-row input { flex: 1; min-width: 0; }
-
-    .voice-button {
-      border: 0;
-      border-radius: 7px;
-      background: #e2f2e6;
-      color: #176b38;
-      padding: 0 13px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    button {
-      cursor: pointer;
-      border: 0;
-      border-radius: 8px;
-      padding: 13px 18px;
-      font-size: 16px;
-      font-weight: bold;
-    }
-
-    button:disabled {
-      opacity: .65;
-      cursor: not-allowed;
-    }
-
-    .main-button {
-      width: 100%;
-      background: #19733d;
-      color: white;
-      margin-top: 12px;
-    }
-
-    .secondary-button {
-      background: #E3F2FD;
-      color: #1565C0;
-      border: 2px solid #1565C0;
-      margin-top: 10px;
-      width: 100%;
-      font-weight: bold;
-    }
-
-    .message {
-      display: none;
-      padding: 13px;
-      border-radius: 8px;
-      margin: 15px 0;
-      line-height: 1.6;
-    }
-
-    #resultMessage {
-      display: block;
-    }
-
-    .error { background: #ffeded; color: #a32222; }
-    .success { background: #e6f5e9; color: #176b38; }
-    .info { background: #fff6dc; color: #725514; }
-
-    .review-item {
-      padding: 10px 0;
-      border-bottom: 1px solid #e5eae6;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .review-item strong { color: #176b38; }
-
-    .small-note {
-      font-size: 13px;
-      color: #647267;
-      line-height: 1.5;
-    }
-
-    .hidden { display: none !important; }
-
-    .footer {
-      text-align: center;
-      font-size: 13px;
-      color: #718075;
-      margin-top: 22px;
-    }
-
-    h3 { text-align: center; }
-
-    .review-heading {
-      color: #176b38;
-      margin: 20px 0 5px;
-      text-align: center;
-      font-size: 18px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ශ්‍රී බෝධිරාජ දහම් පාසල - ශිෂ්‍ය ලියාපදිංචිය</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px 12px;font-family:Arial,sans-serif;background:#eef5ed;color:#24352a}
+.container{max-width:650px;margin:auto;background:#fff;padding:25px;border:2px solid #b8cbd8;border-radius:14px;box-shadow:0 4px 18px rgba(36,53,42,.08)}
+h1{text-align:center;color:#176b38;font-size:25px;margin:5px 0}
+.subtitle{text-align:center;color:#52675a;margin:8px 0 25px}
+.field{margin-bottom:17px}
+label{display:block;font-weight:bold;margin-bottom:7px}
+input{width:100%;padding:12px;border:1px solid #b8c8bc;border-radius:7px;font-size:16px;background:white}
+input:focus{outline:2px solid #80b994;border-color:#247b45}
+.voice-row{display:flex;gap:8px}
+.voice-row input{flex:1;min-width:0}
+.voice-button{border:0;border-radius:7px;background:#e2f2e6;color:#176b38;padding:0 13px;font-size:14px;font-weight:bold;cursor:pointer;white-space:nowrap}
+button{cursor:pointer;border:0;border-radius:8px;padding:13px 18px;font-size:16px;font-weight:bold}
+button:disabled{opacity:.65;cursor:not-allowed}
+.main-button{width:100%;background:#19733d;color:white;margin-top:12px}
+.secondary-button{background:#E3F2FD;color:#1565C0;border:2px solid #1565C0;margin-top:10px;width:100%;font-weight:bold}
+.message{display:none;padding:13px;border-radius:8px;margin:15px 0;line-height:1.6}
+#errorMessage{display:none}
+#resultMessage{display:block}
+.error{background:#ffeded;color:#a32222}
+.success{background:#e6f5e9;color:#176b38}
+.info{background:#fff6dc;color:#725514}
+.review-item{padding:10px 0;border-bottom:1px solid #e5eae6;line-height:1.6;overflow-wrap:anywhere}
+.review-item strong{color:#176b38}
+.small-note{font-size:13px;color:#647267;line-height:1.5}
+.hidden{display:none!important}
+.footer{text-align:center;font-size:13px;color:#718075;margin-top:22px}
+h3{text-align:center}
+.review-heading{color:#176b38;margin:20px 0 5px;text-align:center;font-size:18px}
+</style>
 </head>
-
 <body>
-
 <div class="container">
+<h1>ශ්‍රී බෝධිරාජ දහම් පාසල</h1>
+<div class="subtitle">ශිෂ්‍ය ලියාපදිංචි කිරීමේ පද්ධතිය</div>
 
-  <h1>ශ්‍රී බෝධිරාජ දහම් පාසල</h1>
-  <div class="subtitle">ශිෂ්‍ය ලියාපදිංචි කිරීමේ පද්ධතිය</div>
+<div id="entrySection">
+<div class="message error" id="errorMessage"></div>
+<div class="message info" id="voiceMessage" style="display:none"></div>
+<h3>දරුවාගේ තොරතුරු</h3>
+<p class="small-note">දරුවාගේ පාසල සහ දහම් පාසල් තොරතුරු ඇතුළත් කරන්න.</p>
 
-  <div id="entrySection">
+<div class="field">
+<label for="childName">දරුවාගේ සම්පූර්ණ නම *</label>
+<div class="voice-row">
+<input id="childName" type="text" placeholder="දරුවාගේ සම්පූර්ණ නම">
+<button class="voice-button" type="button" onclick="startVoice('childName')">🎤 හඬ</button>
+</div></div>
 
-    <div class="message error" id="errorMessage"></div>
-    <div class="message info" id="voiceMessage" style="display:none"></div>
+<div class="field">
+<label for="school">ඉගෙනුම ලබන පාසල *</label>
+<div class="voice-row">
+<input id="school" type="text" placeholder="පාසලේ නම">
+<button class="voice-button" type="button" onclick="startVoice('school')">🎤 හඬ</button>
+</div></div>
 
-    <h3>දරුවාගේ තොරතුරු</h3>
-    <p class="small-note">දරුවාගේ පාසල සහ දහම් පාසල් තොරතුරු ඇතුළත් කරන්න.</p>
-
-    <div class="field">
-      <label for="childName">දරුවාගේ සම්පූර්ණ නම *</label>
-      <div class="voice-row">
-        <input id="childName" type="text" placeholder="දරුවාගේ සම්පූර්ණ නම">
-        <button class="voice-button" type="button" onclick="startVoice('childName')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="school">ඉගෙනුම ලබන පාසල *</label>
-      <div class="voice-row">
-        <input id="school" type="text" placeholder="පාසලේ නම">
-        <button class="voice-button" type="button" onclick="startVoice('school')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
-      <input id="grade" type="text"
-       inputmode="numeric"
-       maxlength="2"
-       placeholder="1 සිට 11 දක්වා ශ්‍රේණිය"
-       oninput="formatGrade(this)">
-      <div class="small-note">1 සිට 11 දක්වා ඉලක්කම ඇතුළත් කරන්න.</div>
-    </div>
-
-    <div class="field">
-      <label for="dob">උපන් දිනය *</label>
-      <input id="dob" type="text"
-       maxlength="10" placeholder="YYYY/MM/DD"
-       oninput="formatBirthDate(this)">
-      <div class="small-note">උදාහරණය: 2015/07/09</div>
-    </div>
-
-    <h3>දෙමාපිය තොරතුරු</h3>
-    <p class="small-note">දෙමාපියන්ගේ සහ සම්බන්ධ කරගත හැකි තොරතුරු ඇතුළත් කරන්න.</p>
-
-    <div class="field">
-      <label for="fatherName">පියාගේ නම *</label>
-      <div class="voice-row">
-        <input id="fatherName" type="text" placeholder="පියාගේ සම්පූර්ණ නම">
-        <button class="voice-button" type="button" onclick="startVoice('fatherName')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="motherName">මවගේ නම *</label>
-      <div class="voice-row">
-        <input id="motherName" type="text" placeholder="මවගේ සම්පූර්ණ නම">
-        <button class="voice-button" type="button" onclick="startVoice('motherName')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="address">ලිපිනය *</label>
-      <div class="voice-row">
-        <input id="address" type="text" placeholder="ස්ථිර ලිපිනය">
-        <button class="voice-button" type="button" onclick="startVoice('address')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="phone">WhatsApp දුරකථන අංකය</label>
-      <input id="phone" type="tel"
-       inputmode="numeric"
-       maxlength="12"
-       placeholder="000 000 0000"
-       oninput="formatPhone(this)">
-      <div class="small-note">දුරකථන අංකය ඇතුළත් කිරීම අනිවාර්ය නොවේ.</div>
-    </div>
-
-    <button class="main-button" type="button" onclick="showReview()">
-      තොරතුරු පරීක්ෂා කරන්න
-    </button>
-
-    <p class="small-note">* ලකුණෙන් දක්වා ඇති තොරතුරු අනිවාර්ය වේ.</p>
-
-  </div>
-
-  <div id="reviewSection" class="hidden">
-    <h3>ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
-    <p class="small-note">පහත තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.</p>
-
-    <div id="reviewDetails"></div>
-
-    <button class="secondary-button" type="button" onclick="editDetails()">
-      නැවත සංශෝධනය කරන්න
-    </button>
-
-    <button class="main-button" id="confirmButton" type="button"
-            onclick="confirmRegistration()">
-      තොරතුරු නිවැරදි බව සහතික කරමි
-    </button>
-  </div>
-
-  <div id="resultSection" class="hidden">
-    <div class="message success" id="resultMessage"></div>
-    <button class="main-button" id="resultButton" type="button" onclick="newRegistration()">
-      නැවත පෝරමයට යන්න
-    </button>
-  </div>
-
-  <div class="footer">
-    ශ්‍රී බෝධිරාජ දහම් පාසල
-  </div>
-
+<div class="field">
+<label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
+<input id="grade" type="text" inputmode="numeric" maxlength="2" placeholder="1 සිට 11 දක්වා ශ්‍රේණිය" oninput="formatGrade(this)">
+<div class="small-note">1 සිට 11 දක්වා ඉලක්කම ඇතුළත් කරන්න.</div>
 </div>
 
-<iframe name="googleSheetFrame" id="googleSheetFrame"
-        style="display:none"></iframe>
+<div class="field">
+<label for="dob">උපන් දිනය *</label>
+<input id="dob" type="text" maxlength="10" placeholder="YYYY/MM/DD" oninput="formatBirthDate(this)">
+<div class="small-note">උදාහරණය: 2015/07/09</div>
+</div>
 
-<form id="googleSheetForm" method="POST"
-      target="googleSheetFrame"
-      action="https://script.google.com/macros/s/AKfycbxuDQ3xQFvX3YflyoQ6VrTvvrjcpJVW-videRYIFA-2JCEq-ZBn3Bb7rFMpkjuO3BUKGQ/exec"
-      style="display:none">
-  <input type="hidden" name="payload" id="payload">
+<h3>දෙමාපිය තොරතුරු</h3>
+<p class="small-note">දෙමාපියන්ගේ සහ සම්බන්ධ කරගත හැකි තොරතුරු ඇතුළත් කරන්න.</p>
+
+<div class="field">
+<label for="fatherName">පියාගේ නම *</label>
+<div class="voice-row">
+<input id="fatherName" type="text" placeholder="පියාගේ සම්පූර්ණ නම">
+<button class="voice-button" type="button" onclick="startVoice('fatherName')">🎤 හඬ</button>
+</div></div>
+
+<div class="field">
+<label for="motherName">මවගේ නම *</label>
+<div class="voice-row">
+<input id="motherName" type="text" placeholder="මවගේ සම්පූර්ණ නම">
+<button class="voice-button" type="button" onclick="startVoice('motherName')">🎤 හඬ</button>
+</div></div>
+
+<div class="field">
+<label for="address">ලිපිනය *</label>
+<div class="voice-row">
+<input id="address" type="text" placeholder="ස්ථිර ලිපිනය">
+<button class="voice-button" type="button" onclick="startVoice('address')">🎤 හඬ</button>
+</div></div>
+
+<div class="field">
+<label for="phone">WhatsApp දුරකථන අංකය</label>
+<input id="phone" type="tel" inputmode="numeric" maxlength="12" placeholder="000 000 0000" oninput="formatPhone(this)">
+<div class="small-note">දුරකථන අංකය ඇතුළත් කිරීම අනිවාර්ය නොවේ.</div>
+</div>
+
+<button class="main-button" type="button" onclick="showReview()">තොරතුරු පරීක්ෂා කරන්න</button>
+<p class="small-note">* ලකුණෙන් දක්වා ඇති තොරතුරු අනිවාර්ය වේ.</p>
+</div>
+
+<div id="reviewSection" class="hidden">
+<h3>ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
+<p class="small-note">පහත තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.</p>
+<div id="reviewDetails"></div>
+<button class="secondary-button" type="button" onclick="editDetails()">නැවත සංශෝධනය කරන්න</button>
+<button class="main-button" id="confirmButton" type="button" onclick="confirmRegistration()">තොරතුරු නිවැරදි බව සහතික කරමි</button>
+</div>
+
+<div id="resultSection" class="hidden">
+<div class="message success" id="resultMessage"></div>
+<button class="main-button" id="resultButton" type="button" onclick="newRegistration()">නැවත පෝරමයට යන්න</button>
+</div>
+
+<div class="footer">ශ්‍රී බෝධිරාජ දහම් පාසල</div>
+</div>
+
+<iframe name="googleSheetFrame" id="googleSheetFrame" style="display:none"></iframe>
+<form id="googleSheetForm" method="POST" target="googleSheetFrame"
+action="https://script.google.com/macros/s/AKfycbxuDQ3xQFvX3YflyoQ6VrTvvrjcpJVW-videRYIFA-2JCEq-ZBn3Bb7rFMpkjuO3BUKGQ/exec"
+style="display:none">
+<input type="hidden" name="payload" id="payload">
 </form>
 
 <script>
-  const SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbxuDQ3xQFvX3YflyoQ6VrTvvrjcpJVW-videRYIFA-2JCEq-ZBn3Bb7rFMpkjuO3BUKGQ/exec";
-
-  let currentData = null;
-  let pendingRequestId = null;
-  let responseTimer = null;
-  let recognition = null;
-
-  const fields = [
-    ["fatherName", "පියාගේ නම"],
-    ["motherName", "මවගේ නම"],
-    ["address", "ලිපිනය"],
-    ["phone", "WhatsApp දුරකථන අංකය"],
-    ["childName", "දරුවාගේ නම"],
-    ["school", "පාසල"],
-    ["grade", "ශ්‍රේණිය"],
-    ["dob", "උපන් දිනය"]
-  ];
-
-  function getFormData() {
-    const data = {};
-    fields.forEach(([id]) => {
-      data[id] = document.getElementById(id).value.trim();
-    });
-    return data;
-  }
-
-  function showError(message) {
-    const box = document.getElementById("errorMessage");
-    box.textContent = message;
-    box.style.display = "block";
-    box.scrollIntoView({behavior: "smooth", block: "center"});
-  }
-
-  function hideError() {
-    document.getElementById("errorMessage").style.display = "none";
-  }
-
-  function parseBirthDate(value) {
-    if (!/^\d{4}\/\d{2}\/\d{2}$/.test(value)) {
-      return null;
-    }
-
-    const parts = value.split("/").map(Number);
-    const year = parts[0];
-    const month = parts[1];
-    const day = parts[2];
-
-    const date = new Date(year, month - 1, day);
-    date.setHours(0, 0, 0, 0);
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (
-      date.getFullYear() !== year ||
-      date.getMonth() !== month - 1 ||
-      date.getDate() !== day ||
-      year < 1900 ||
-      date > today
-    ) {
-      return null;
-    }
-
-    return (
-      String(year).padStart(4, "0") + "-" +
-      String(month).padStart(2, "0") + "-" +
-      String(day).padStart(2, "0")
-    );
-  }
-
-  function formatBirthDate(input) {
-    let digits = input.value.replace(/\D/g, "").slice(0, 8);
-
-    let formatted = digits.slice(0, 4);
-
-    if (digits.length >= 4) {
-      formatted += "/";
-    }
-
-    if (digits.length > 4) {
-      formatted += digits.slice(4, 6);
-    }
-
-    if (digits.length >= 6) {
-      formatted += "/";
-    }
-
-    if (digits.length > 6) {
-      formatted += digits.slice(6, 8);
-    }
-
-    input.value = formatted;
-  }
-
-  function startVoice(fieldId) {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      alert("මෙම බ්‍රවුසරයේ හඬ ආදාන පහසුකම නොමැත. කරුණාකර Chrome භාවිත කරන්න.");
-      return;
-    }
-
-    if (recognition) {
-      try { recognition.stop(); } catch (e) {}
-    }
-
-    recognition = new SpeechRecognition();
-    recognition.lang = "si-LK";
-    recognition.continuous = false;
-    recognition.interimResults = false;
-
-    const voiceMessage = document.getElementById("voiceMessage");
-    voiceMessage.textContent = "ඔබගේ කටහඬට සවන් දෙමින් සිටී...";
-    voiceMessage.style.display = "block";
-
-    recognition.onresult = function(event) {
-      const transcript = event.results[0][0].transcript;
-      const input = document.getElementById(fieldId);
-
-      input.value = input.value
-        ? input.value + " " + transcript
-        : transcript;
-
-      voiceMessage.textContent = "හඬ ආදානය සාර්ථකයි.";
-    };
-
-    recognition.onerror = function(event) {
-      voiceMessage.textContent =
-        "හඬ ආදානයේ දෝෂයක්: " + event.error;
-    };
-
-    recognition.onend = function() {
-      if (voiceMessage.textContent === "ඔබගේ කටහඬට සවන් දෙමින් සිටී...") {
-        voiceMessage.textContent = "හඬ ආදානය අවසන් විය.";
-      }
-    };
-
-    try {
-      recognition.start();
-    } catch (error) {
-      voiceMessage.textContent = "මයික්‍රෆෝනය ආරම්භ කළ නොහැක.";
-    }
-  }
-
-  function showReview() {
-    hideError();
-
-    const data = getFormData();
-
-    const required = [
-      ["fatherName", "පියාගේ නම"],
-      ["motherName", "මවගේ නම"],
-      ["address", "ලිපිනය"],
-      ["childName", "දරුවාගේ නම"],
-      ["school", "පාසල"],
-      ["grade", "ශ්‍රේණිය"],
-      ["dob", "උපන් දිනය"]
-    ];
-
-    for (const [id, label] of required) {
-      if (!data[id]) {
-        showError(label + " ඇතුළත් කරන්න.");
-        document.getElementById(id).focus();
-        return;
-      }
-    }
-
-    if (!/^(?:[1-9]|1[01])$/.test(data.grade)) {
-      showError("දහම් පාසල් ශ්‍රේණිය 1 සිට 11 දක්වා නිවැරදි ඉලක්කමක් විය යුතුයි.");
-      document.getElementById("grade").focus();
-      return;
-    }
-
-    const phone = data.phone.replace(/\s/g, "");
-
-    if (phone && !/^\d{10}$/.test(phone)) {
-      showError("දුරකථන අංකය ඉලක්කම් 10ක් විය යුතුයි.");
-      document.getElementById("phone").focus();
-      return;
-    }
-
-    const isoDob = parseBirthDate(data.dob);
-
-    if (!isoDob) {
-      showError("උපන් දිනය YYYY/MM/DD ආකාරයට නිවැරදිව ඇතුළත් කරන්න. උදා: 2015/07/09");
-      document.getElementById("dob").focus();
-      return;
-    }
-
-    currentData = {...data, isoDob: isoDob};
-
-    const labels = {
-      fatherName: "පියාගේ නම",
-      motherName: "මවගේ නම",
-      address: "ලිපිනය",
-      phone: "WhatsApp අංකය",
-      childName: "දරුවාගේ නම",
-      school: "පාසල",
-      grade: "දහම් පාසල් ශ්‍රේණිය",
-      dob: "උපන් දිනය"
-    };
-
-    const review = document.getElementById("reviewDetails");
-    review.replaceChildren();
-
-    function addReviewGroup(title, groupFields) {
-      const heading = document.createElement("h4");
-      heading.className = "review-heading";
-      heading.textContent = title;
-      review.appendChild(heading);
-
-      groupFields.forEach(([id]) => {
-        const item = document.createElement("div");
-        item.className = "review-item";
-
-        const strong = document.createElement("strong");
-        strong.textContent = labels[id] + ": ";
-
-        const value = document.createElement("span");
-        value.textContent =
-          id === "grade"
-            ? data[id] + " ශ්‍රේණිය"
-            : (data[id] || "ඇතුළත් කර නැත");
-
-        item.appendChild(strong);
-        item.appendChild(value);
-        review.appendChild(item);
-      });
-    }
-
-    addReviewGroup("දරුවාගේ තොරතුරු", [
-      ["childName"],
-      ["school"],
-      ["grade"],
-      ["dob"]
-    ]);
-
-    addReviewGroup("දෙමාපිය තොරතුරු", [
-      ["fatherName"],
-      ["motherName"],
-      ["address"],
-      ["phone"]
-    ]);
-
-    document.getElementById("entrySection").classList.add("hidden");
-    document.getElementById("reviewSection").classList.remove("hidden");
-
-    document.getElementById("reviewSection")
-      .scrollIntoView({behavior: "smooth"});
-  }
-
-  function editDetails() {
-    document.getElementById("reviewSection").classList.add("hidden");
-    document.getElementById("entrySection").classList.remove("hidden");
-
-    window.scrollTo({top: 0, behavior: "smooth"});
-  }
-
-  function confirmRegistration() {
-    if (!currentData || pendingRequestId) return;
-
-    if (!confirm("ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව සහතික කර පරීක්ෂණ ඉල්ලීම ඉදිරිපත් කරනවාද?")) {
-      return;
-    }
-
-    const button = document.getElementById("confirmButton");
-    button.disabled = true;
-    button.textContent = "තොරතුරු පරීක්ෂා කරමින් පවතී...";
-
-    pendingRequestId =
-      (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : String(Date.now()) + String(Math.random()).slice(2);
-
-    const submission = {
-      fatherName: currentData.fatherName,
-      motherName: currentData.motherName,
-      address: currentData.address,
-      phone: currentData.phone,
-      childName: currentData.childName,
-      school: currentData.school,
-      grade: currentData.grade,
-      dob: currentData.isoDob,
-      requestId: pendingRequestId
-    };
-
-    document.getElementById("payload").value =
-      JSON.stringify(submission);
-
-    document.getElementById("googleSheetForm").submit();
-
-    responseTimer = setTimeout(function() {
-      if (pendingRequestId) {
-        pendingRequestId = null;
-        button.disabled = false;
-        button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
-
-        alert(
-          "පද්ධතියෙන් පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
-          "පරීක්ෂණ ප්‍රතිඵලය නොලැබුණු නිසා නැවත යැවීමට පෙර පාලක මණ්ඩලය සමඟ තහවුරු කරගන්න."
-        );
-      }
-    }, 45000);
-  }
-
-  /************************************************************
-   * GOOGLE APPS SCRIPT RESPONSE
-   ************************************************************/
-
-  window.addEventListener("message", function(event) {
-
-    const responseFrame = document.getElementById("googleSheetFrame");
-
-    // පිළිතුර අපගේ සැඟවුණු iframe එකෙන්ම පැමිණිය යුතුයි.
-    if (event.source !== responseFrame.contentWindow) return;
-
-    // Google වෙතින් ලැබෙන පිළිතුරු පමණක් භාරගන්න.
-    const isTrustedGoogleOrigin =
-      event.origin === "https://script.google.com" ||
-      event.origin.endsWith(".googleusercontent.com");
-
-    if (!isTrustedGoogleOrigin) return;
-
-    if (!event.data || typeof event.data !== "object") return;
-
-    if (
-      !pendingRequestId ||
-      event.data.requestId !== pendingRequestId
-    ) return;
-
-    clearTimeout(responseTimer);
-    pendingRequestId = null;
-
-    const button = document.getElementById("confirmButton");
-    button.disabled = false;
-    button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
-
-    const resultSection = document.getElementById("resultSection");
-    const resultMessage = document.getElementById("resultMessage");
-    const resultButton = document.getElementById("resultButton");
-
-    if (event.data.testMode === true) {
-
-      document.getElementById("reviewSection").classList.add("hidden");
-      resultSection.classList.remove("hidden");
-
-      resultMessage.textContent =
-        event.data.message ||
-        "පරීක්ෂණය සාර්ථකයි! ඇතුළත් කළ තොරතුරු නිවැරදියි. පරීක්ෂණ මාදිලිය නිසා කිසිදු ශිෂ්‍ය තොරතුරක් Sheet එකට සුරැකුවේ නැත.";
-
-      resultButton.textContent = "නැවත පෝරමයට යන්න";
-
-      resultMessage.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-
-      return;
-    }
-
-    if (event.data.success === true) {
-
-      document.getElementById("reviewSection").classList.add("hidden");
-      resultSection.classList.remove("hidden");
-
-      resultMessage.textContent =
-        event.data.message ||
-        "ලියාපදිංචි ඉල්ලීම සාර්ථකව ලැබුණා. පාලක මණ්ඩලයේ අනුමැතිය බලාපොරොත්තු වන්න.";
-
-      resultButton.textContent = "තවත් දරුවෙකු ලියාපදිංචි කරන්න";
-
-      resultMessage.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-
-    } else {
-
-      document.getElementById("reviewSection").classList.remove("hidden");
-
-      alert(event.data.message || "තොරතුරු පරීක්ෂා කිරීමේදී දෝෂයක් ඇති වුණා.");
-    }
-  });
-
-  function newRegistration() {
-    fields.forEach(([id]) => {
-      document.getElementById(id).value = "";
-    });
-
-    currentData = null;
-    pendingRequestId = null;
-
-    document.getElementById("resultSection").classList.add("hidden");
-    document.getElementById("reviewSection").classList.add("hidden");
-    document.getElementById("entrySection").classList.remove("hidden");
-    document.getElementById("voiceMessage").style.display = "none";
-
-    hideError();
-
-    window.scrollTo({top: 0, behavior: "smooth"});
-  }
-
-  function formatPhone(input) {
-    let digits = input.value.replace(/\D/g, "").slice(0, 10);
-
-    let formatted = digits.slice(0, 3);
-
-    if (digits.length > 3) {
-      formatted += " " + digits.slice(3, 6);
-    }
-
-    if (digits.length > 6) {
-      formatted += " " + digits.slice(6, 10);
-    }
-
-    input.value = formatted;
-  }
-
-  function formatGrade(input) {
-    input.value = input.value.replace(/\D/g, "").slice(0, 2);
-  }
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbxuDQ3xQFvX3YflyoQ6VrTvvrjcpJVW-videRYIFA-2JCEq-ZBn3Bb7rFMpkjuO3BUKGQ/exec";
+let currentData=null,pendingRequestId=null,responseTimer=null,recognition=null;
+
+const fields=[
+["fatherName","පියාගේ නම"],["motherName","මවගේ නම"],
+["address","ලිපිනය"],["phone","WhatsApp දුරකථන අංකය"],
+["childName","දරුවාගේ නම"],["school","පාසල"],
+["grade","ශ්‍රේණිය"],["dob","උපන් දිනය"]
+];
+
+function getFormData(){
+const data={};
+fields.forEach(([id])=>data[id]=document.getElementById(id).value.trim());
+return data;
+}
+function showError(message){
+const box=document.getElementById("errorMessage");
+box.textContent=message;box.style.display="block";
+box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function hideError(){document.getElementById("errorMessage").style.display="none";}
+
+function parseBirthDate(value){
+if(!/^\d{4}\/\d{2}\/\d{2}$/.test(value))return null;
+const [year,month,day]=value.split("/").map(Number);
+const date=new Date(year,month-1,day);date.setHours(0,0,0,0);
+const today=new Date();today.setHours(0,0,0,0);
+if(date.getFullYear()!==year||date.getMonth()!==month-1||date.getDate()!==day||year<1900||date>today)return null;
+return String(year).padStart(4,"0")+"-"+String(month).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+}
+function formatBirthDate(input){
+let digits=input.value.replace(/\D/g,"").slice(0,8);
+let formatted=digits.slice(0,4);
+if(digits.length>=4)formatted+="/";
+if(digits.length>4)formatted+=digits.slice(4,6);
+if(digits.length>=6)formatted+="/";
+if(digits.length>6)formatted+=digits.slice(6,8);
+input.value=formatted;
+}
+function startVoice(fieldId){
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SpeechRecognition){alert("මෙම බ්‍රවුසරයේ හඬ ආදාන පහසුකම නොමැත. කරුණාකර Chrome භාවිත කරන්න.");return;}
+if(recognition){try{recognition.stop();}catch(e){}}
+recognition=new SpeechRecognition();recognition.lang="si-LK";recognition.continuous=false;recognition.interimResults=false;
+const voiceMessage=document.getElementById("voiceMessage");
+voiceMessage.textContent="ඔබගේ කටහඬට සවන් දෙමින් සිටී...";voiceMessage.style.display="block";
+recognition.onresult=function(event){
+const transcript=event.results[0][0].transcript,input=document.getElementById(fieldId);
+input.value=input.value?input.value+" "+transcript:transcript;
+voiceMessage.textContent="හඬ ආදානය සාර්ථකයි.";
+};
+recognition.onerror=function(event){voiceMessage.textContent="හඬ ආදානයේ දෝෂයක්: "+event.error;};
+recognition.onend=function(){if(voiceMessage.textContent==="ඔබගේ කටහඬට සවන් දෙමින් සිටී...")voiceMessage.textContent="හඬ ආදානය අවසන් විය.";};
+try{recognition.start();}catch(error){voiceMessage.textContent="මයික්‍රෆෝනය ආරම්භ කළ නොහැක.";}
+}
+
+function showReview(){
+hideError();const data=getFormData();
+const required=[["fatherName","පියාගේ නම"],["motherName","මවගේ නම"],["address","ලිපිනය"],["childName","දරුවාගේ නම"],["school","පාසල"],["grade","ශ්‍රේණිය"],["dob","උපන් දිනය"]];
+for(const [id,label] of required){if(!data[id]){showError(label+" ඇතුළත් කරන්න.");document.getElementById(id).focus();return;}}
+if(!/^(?:[1-9]|1[01])$/.test(data.grade)){showError("දහම් පාසල් ශ්‍රේණිය 1 සිට 11 දක්වා නිවැරදි ඉලක්කමක් විය යුතුයි.");document.getElementById("grade").focus();return;}
+const phone=data.phone.replace(/\s/g,"");
+if(phone&&!/^\d{10}$/.test(phone)){showError("දුරකථන අංකය ඉලක්කම් 10ක් විය යුතුයි.");document.getElementById("phone").focus();return;}
+const isoDob=parseBirthDate(data.dob);
+if(!isoDob){showError("උපන් දිනය YYYY/MM/DD ආකාරයට නිවැරදිව ඇතුළත් කරන්න. උදා: 2015/07/09");document.getElementById("dob").focus();return;}
+currentData={...data,isoDob};
+const labels={fatherName:"පියාගේ නම",motherName:"මවගේ නම",address:"ලිපිනය",phone:"WhatsApp අංකය",childName:"දරුවාගේ නම",school:"පාසල",grade:"දහම් පාසල් ශ්‍රේණිය",dob:"උපන් දිනය"};
+const review=document.getElementById("reviewDetails");review.replaceChildren();
+function addReviewGroup(title,groupFields){
+const heading=document.createElement("h4");heading.className="review-heading";heading.textContent=title;review.appendChild(heading);
+groupFields.forEach(([id])=>{
+const item=document.createElement("div");item.className="review-item";
+const strong=document.createElement("strong");strong.textContent=labels[id]+": ";
+const value=document.createElement("span");value.textContent=id==="grade"?data[id]+" ශ්‍රේණිය":(data[id]||"ඇතුළත් කර නැත");
+item.appendChild(strong);item.appendChild(value);review.appendChild(item);
+});
+}
+addReviewGroup("දරුවාගේ තොරතුරු",[["childName"],["school"],["grade"],["dob"]]);
+addReviewGroup("දෙමාපිය තොරතුරු",[["fatherName"],["motherName"],["address"],["phone"]]);
+document.getElementById("entrySection").classList.add("hidden");
+document.getElementById("reviewSection").classList.remove("hidden");
+document.getElementById("reviewSection").scrollIntoView({behavior:"smooth"});
+}
+function editDetails(){
+document.getElementById("reviewSection").classList.add("hidden");
+document.getElementById("entrySection").classList.remove("hidden");
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function confirmRegistration(){
+if(!currentData||pendingRequestId)return;
+if(!confirm("ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව සහතික කර පරීක්ෂණ ඉල්ලීම ඉදිරිපත් කරනවාද?"))return;
+const button=document.getElementById("confirmButton");
+button.disabled=true;button.textContent="තොරතුරු පරීක්ෂා කරමින් පවතී...";
+pendingRequestId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+String(Math.random()).slice(2);
+const submission={
+fatherName:currentData.fatherName,motherName:currentData.motherName,address:currentData.address,
+phone:currentData.phone,childName:currentData.childName,school:currentData.school,
+grade:currentData.grade,dob:currentData.isoDob,requestId:pendingRequestId
+};
+document.getElementById("payload").value=JSON.stringify(submission);
+document.getElementById("googleSheetForm").submit();
+responseTimer=setTimeout(function(){
+if(pendingRequestId){
+pendingRequestId=null;button.disabled=false;
+button.textContent="තොරතුරු නිවැරදි බව සහතික කරමි";
+alert("පද්ධතියෙන් පිළිතුරක් ලැබීමට ප්‍රමාදයි. පරීක්ෂණ ප්‍රතිඵලය නොලැබුණු නිසා නැවත යැවීමට පෙර පාලක මණ්ඩලය සමඟ තහවුරු කරගන්න.");
+}
+},45000);
+}
+
+/************************************************************
+ * GOOGLE APPS SCRIPT RESPONSE
+ * SOURCE CHECK ඉවත් කර REQUEST ID + TRUSTED ORIGIN පරීක්ෂා කරයි.
+ ************************************************************/
+window.addEventListener("message",function(event){
+const hostname=(()=>{
+try{return new URL(event.origin).hostname;}catch(e){return "";}
+})();
+const isTrustedGoogleOrigin=
+hostname==="script.google.com"||
+hostname==="script.googleusercontent.com"||
+hostname.endsWith(".googleusercontent.com");
+if(!isTrustedGoogleOrigin)return;
+if(!event.data||typeof event.data!=="object")return;
+if(!pendingRequestId||event.data.requestId!==pendingRequestId)return;
+
+clearTimeout(responseTimer);pendingRequestId=null;
+const button=document.getElementById("confirmButton");
+button.disabled=false;button.textContent="තොරතුරු නිවැරදි බව සහතික කරමි";
+const resultSection=document.getElementById("resultSection");
+const resultMessage=document.getElementById("resultMessage");
+const resultButton=document.getElementById("resultButton");
+
+if(event.data.testMode===true){
+document.getElementById("reviewSection").classList.add("hidden");
+resultSection.classList.remove("hidden");
+resultMessage.textContent=event.data.message||"පරීක්ෂණය සාර්ථකයි! ඇතුළත් කළ තොරතුරු නිවැරදියි. පරීක්ෂණ මාදිලිය නිසා කිසිදු ශිෂ්‍ය තොරතුරක් Sheet එකට සුරැකුවේ නැත.";
+resultButton.textContent="නැවත පෝරමයට යන්න";
+resultMessage.scrollIntoView({behavior:"smooth",block:"center"});
+return;
+}
+if(event.data.success===true){
+document.getElementById("reviewSection").classList.add("hidden");
+resultSection.classList.remove("hidden");
+resultMessage.textContent=event.data.message||"ලියාපදිංචි ඉල්ලීම සාර්ථකව ලැබුණා. පාලක මණ්ඩලයේ අනුමැතිය බලාපොරොත්තු වන්න.";
+resultButton.textContent="තවත් දරුවෙකු ලියාපදිංචි කරන්න";
+resultMessage.scrollIntoView({behavior:"smooth",block:"center"});
+}else{
+document.getElementById("reviewSection").classList.remove("hidden");
+alert(event.data.message||"තොරතුරු පරීක්ෂා කිරීමේදී දෝෂයක් ඇති වුණා.");
+}
+});
+
+function newRegistration(){
+fields.forEach(([id])=>document.getElementById(id).value="");
+currentData=null;pendingRequestId=null;
+document.getElementById("resultSection").classList.add("hidden");
+document.getElementById("reviewSection").classList.add("hidden");
+document.getElementById("entrySection").classList.remove("hidden");
+document.getElementById("voiceMessage").style.display="none";
+hideError();window.scrollTo({top:0,behavior:"smooth"});
+}
+function formatPhone(input){
+let digits=input.value.replace(/\D/g,"").slice(0,10);
+let formatted=digits.slice(0,3);
+if(digits.length>3)formatted+=" "+digits.slice(3,6);
+if(digits.length>6)formatted+=" "+digits.slice(6,10);
+input.value=formatted;
+}
+function formatGrade(input){input.value=input.value.replace(/\D/g,"").slice(0,2);}
 </script>
-
 </body>
 </html>
