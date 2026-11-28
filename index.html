@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="si">
 <head>
@@ -111,16 +112,16 @@
     }
 
     .message {
-  display: none;
-  padding: 13px;
-  border-radius: 8px;
-  margin: 15px 0;
-  line-height: 1.6;
-}
+      display: none;
+      padding: 13px;
+      border-radius: 8px;
+      margin: 15px 0;
+      line-height: 1.6;
+    }
 
-#resultMessage {
-  display: block;
-}
+    #resultMessage {
+      display: block;
+    }
 
     .error { background: #ffeded; color: #a32222; }
     .success { background: #e6f5e9; color: #176b38; }
@@ -150,9 +151,7 @@
       margin-top: 22px;
     }
 
-    h3 {
-      text-align: center;
-    }
+    h3 { text-align: center; }
 
     .review-heading {
       color: #176b38;
@@ -175,7 +174,6 @@
     <div class="message error" id="errorMessage"></div>
     <div class="message info" id="voiceMessage" style="display:none"></div>
 
-    <!-- දරුවාගේ තොරතුරු -->
     <h3>දරුවාගේ තොරතුරු</h3>
     <p class="small-note">දරුවාගේ පාසල සහ දහම් පාසල් තොරතුරු ඇතුළත් කරන්න.</p>
 
@@ -213,7 +211,6 @@
       <div class="small-note">උදාහරණය: 2015/07/09</div>
     </div>
 
-    <!-- දෙමාපිය තොරතුරු -->
     <h3>දෙමාපිය තොරතුරු</h3>
     <p class="small-note">දෙමාපියන්ගේ සහ සම්බන්ධ කරගත හැකි තොරතුරු ඇතුළත් කරන්න.</p>
 
@@ -606,12 +603,24 @@
     }, 45000);
   }
 
+  /************************************************************
+   * GOOGLE APPS SCRIPT RESPONSE
+   ************************************************************/
+
   window.addEventListener("message", function(event) {
+
+    const responseFrame = document.getElementById("googleSheetFrame");
+
+    // පිළිතුර අපගේ සැඟවුණු iframe එකෙන්ම පැමිණිය යුතුයි.
+    if (event.source !== responseFrame.contentWindow) return;
+
+    // Google වෙතින් ලැබෙන පිළිතුරු පමණක් භාරගන්න.
     const isTrustedGoogleOrigin =
       event.origin === "https://script.google.com" ||
       event.origin.endsWith(".googleusercontent.com");
 
     if (!isTrustedGoogleOrigin) return;
+
     if (!event.data || typeof event.data !== "object") return;
 
     if (
@@ -626,32 +635,47 @@
     button.disabled = false;
     button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
 
+    const resultSection = document.getElementById("resultSection");
+    const resultMessage = document.getElementById("resultMessage");
+    const resultButton = document.getElementById("resultButton");
+
     if (event.data.testMode === true) {
+
       document.getElementById("reviewSection").classList.add("hidden");
-      document.getElementById("resultSection").classList.remove("hidden");
+      resultSection.classList.remove("hidden");
 
-      document.getElementById("resultMessage").textContent =
+      resultMessage.textContent =
         event.data.message ||
-        "පරීක්ෂණය සාර්ථකයි. තොරතුරු නිවැරදියි. පරීක්ෂණ මාදිලිය නිසා කිසිදු ශිෂ්‍ය තොරතුරක් Sheet එකට සුරැකුවේ නැත.";
+        "පරීක්ෂණය සාර්ථකයි! ඇතුළත් කළ තොරතුරු නිවැරදියි. පරීක්ෂණ මාදිලිය නිසා කිසිදු ශිෂ්‍ය තොරතුරක් Sheet එකට සුරැකුවේ නැත.";
 
-      document.getElementById("resultButton").textContent =
-        "නැවත පෝරමයට යන්න";
+      resultButton.textContent = "නැවත පෝරමයට යන්න";
+
+      resultMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
 
       return;
     }
 
     if (event.data.success === true) {
-      document.getElementById("reviewSection").classList.add("hidden");
-      document.getElementById("resultSection").classList.remove("hidden");
 
-      document.getElementById("resultMessage").textContent =
+      document.getElementById("reviewSection").classList.add("hidden");
+      resultSection.classList.remove("hidden");
+
+      resultMessage.textContent =
         event.data.message ||
         "ලියාපදිංචි ඉල්ලීම සාර්ථකව ලැබුණා. පාලක මණ්ඩලයේ අනුමැතිය බලාපොරොත්තු වන්න.";
 
-      document.getElementById("resultButton").textContent =
-        "තවත් දරුවෙකු ලියාපදිංචි කරන්න";
+      resultButton.textContent = "තවත් දරුවෙකු ලියාපදිංචි කරන්න";
+
+      resultMessage.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
 
     } else {
+
       document.getElementById("reviewSection").classList.remove("hidden");
 
       alert(event.data.message || "තොරතුරු පරීක්ෂා කිරීමේදී දෝෂයක් ඇති වුණා.");
