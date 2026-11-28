@@ -149,6 +149,13 @@
     h3 {
       text-align: center;
     }
+
+    .review-heading {
+      color: #176b38;
+      margin: 20px 0 5px;
+      text-align: left;
+      font-size: 18px;
+    }
   </style>
 </head>
 
@@ -495,23 +502,44 @@
     const review = document.getElementById("reviewDetails");
     review.replaceChildren();
 
-    fields.forEach(([id]) => {
-      const item = document.createElement("div");
-      item.className = "review-item";
+    function addReviewGroup(title, groupFields) {
+      const heading = document.createElement("h4");
+      heading.className = "review-heading";
+      heading.textContent = title;
+      review.appendChild(heading);
 
-      const strong = document.createElement("strong");
-      strong.textContent = labels[id] + ": ";
+      groupFields.forEach(([id]) => {
+        const item = document.createElement("div");
+        item.className = "review-item";
 
-      const value = document.createElement("span");
-      value.textContent =
-        id === "grade"
-          ? data[id] + " ශ්‍රේණිය"
-          : (data[id] || "ඇතුළත් කර නැත");
+        const strong = document.createElement("strong");
+        strong.textContent = labels[id] + ": ";
 
-      item.appendChild(strong);
-      item.appendChild(value);
-      review.appendChild(item);
-    });
+        const value = document.createElement("span");
+        value.textContent =
+          id === "grade"
+            ? data[id] + " ශ්‍රේණිය"
+            : (data[id] || "ඇතුළත් කර නැත");
+
+        item.appendChild(strong);
+        item.appendChild(value);
+        review.appendChild(item);
+      });
+    }
+
+    addReviewGroup("දරුවාගේ තොරතුරු", [
+      ["childName"],
+      ["school"],
+      ["grade"],
+      ["dob"]
+    ]);
+
+    addReviewGroup("දෙමාපිය තොරතුරු", [
+      ["fatherName"],
+      ["motherName"],
+      ["address"],
+      ["phone"]
+    ]);
 
     document.getElementById("entrySection").classList.add("hidden");
     document.getElementById("reviewSection").classList.remove("hidden");
