@@ -16,15 +16,15 @@
       color: #24352a;
     }
 
- .container {
-  max-width: 650px;
-  margin: auto;
-  background: #ffffff;
-  padding: 25px;
-  border: 2px solid #b8cbd8;
-  border-radius: 14px;
-  box-shadow: 0 4px 18px rgba(36, 53, 42, 0.08);
-}
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background: #ffffff;
+      padding: 25px;
+      border: 2px solid #b8cbd8;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(36, 53, 42, 0.08);
+    }
 
     h1 {
       text-align: center;
@@ -102,13 +102,13 @@
     }
 
     .secondary-button {
-  background: #E3F2FD;
-  color: #1565C0;
-  border: 2px solid #1565C0;
-  margin-top: 10px;
-  width: 100%;
-  font-weight: bold;
-}
+      background: #E3F2FD;
+      color: #1565C0;
+      border: 2px solid #1565C0;
+      margin-top: 10px;
+      width: 100%;
+      font-weight: bold;
+    }
 
     .message {
       display: none;
@@ -137,31 +137,6 @@
       line-height: 1.5;
     }
 
-    .security-box {
-      margin-top: 22px;
-      padding: 15px;
-      background: #f5faf5;
-      border: 1px solid #dce9de;
-      border-radius: 9px;
-    }
-
-    .security-title {
-      font-weight: bold;
-      color: #176b38;
-      margin-bottom: 10px;
-    }
-
-    #turnstileWidget {
-      min-height: 65px;
-    }
-
-    #turnstileMessage {
-      font-size: 13px;
-      line-height: 1.5;
-      color: #725514;
-      margin-top: 8px;
-    }
-
     .hidden { display: none !important; }
 
     .footer {
@@ -170,11 +145,10 @@
       color: #718075;
       margin-top: 22px;
     }
-    
-h3 {
-  text-align: center;
-}
-    
+
+    h3 {
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -185,116 +159,105 @@ h3 {
   <h1>ශ්‍රී බෝධිරාජ දහම් පාසල</h1>
   <div class="subtitle">ශිෂ්‍ය ලියාපදිංචි කිරීමේ පද්ධතිය</div>
 
- <div id="entrySection">
+  <div id="entrySection">
 
-  <div class="message error" id="errorMessage"></div>
-  <div class="message info" id="voiceMessage" style="display:none"></div>
+    <div class="message error" id="errorMessage"></div>
+    <div class="message info" id="voiceMessage" style="display:none"></div>
 
-  <!-- දරුවාගේ තොරතුරු -->
-  <h3>දරුවාගේ තොරතුරු</h3>
-  <p class="small-note">දරුවාගේ පාසල සහ දහම් පාසල් තොරතුරු ඇතුළත් කරන්න.</p>
+    <!-- දරුවාගේ තොරතුරු -->
+    <h3>දරුවාගේ තොරතුරු</h3>
+    <p class="small-note">දරුවාගේ පාසල සහ දහම් පාසල් තොරතුරු ඇතුළත් කරන්න.</p>
 
-  <div class="field">
-    <label for="childName">දරුවාගේ සම්පූර්ණ නම *</label>
-    <div class="voice-row">
-      <input id="childName" type="text" placeholder="දරුවාගේ සම්පූර්ණ නම">
-      <button class="voice-button" type="button" onclick="startVoice('childName')">🎤 හඬ</button>
+    <div class="field">
+      <label for="childName">දරුවාගේ සම්පූර්ණ නම *</label>
+      <div class="voice-row">
+        <input id="childName" type="text" placeholder="දරුවාගේ සම්පූර්ණ නම">
+        <button class="voice-button" type="button" onclick="startVoice('childName')">🎤 හඬ</button>
+      </div>
     </div>
-  </div>
 
-  <div class="field">
-    <label for="school">ඉගෙනුම ලබන පාසල *</label>
-    <div class="voice-row">
-      <input id="school" type="text" placeholder="පාසලේ නම">
-      <button class="voice-button" type="button" onclick="startVoice('school')">🎤 හඬ</button>
+    <div class="field">
+      <label for="school">ඉගෙනුම ලබන පාසල *</label>
+      <div class="voice-row">
+        <input id="school" type="text" placeholder="පාසලේ නම">
+        <button class="voice-button" type="button" onclick="startVoice('school')">🎤 හඬ</button>
+      </div>
     </div>
-  </div>
 
-  <div class="field">
-    <label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
-    <input id="grade" type="text"
-     inputmode="numeric"
-     maxlength="2"
-     placeholder="1 සිට 11 දක්වා ශ්‍රේණිය"
-     oninput="formatGrade(this)">
-    <div class="small-note">1 සිට 11 දක්වා ඉලක්කම ඇතුළත් කරන්න.</div>
-  </div>
-
-  <div class="field">
-    <label for="dob">උපන් දිනය *</label>
-    <input id="dob" type="text"
-     maxlength="10" placeholder="YYYY/MM/DD"
-     oninput="formatBirthDate(this)">
-    <div class="small-note">උදාහරණය: 2015/07/09</div>
-  </div>
-
-  <!-- දෙමාපිය තොරතුරු -->
-  <h3>දෙමාපිය තොරතුරු</h3>
-  <p class="small-note">දෙමාපියන්ගේ සහ සම්බන්ධ කරගත හැකි තොරතුරු ඇතුළත් කරන්න.</p>
-
-  <div class="field">
-    <label for="fatherName">පියාගේ නම *</label>
-    <div class="voice-row">
-      <input id="fatherName" type="text" placeholder="පියාගේ සම්පූර්ණ නම">
-      <button class="voice-button" type="button" onclick="startVoice('fatherName')">🎤 හඬ</button>
+    <div class="field">
+      <label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
+      <input id="grade" type="text"
+       inputmode="numeric"
+       maxlength="2"
+       placeholder="1 සිට 11 දක්වා ශ්‍රේණිය"
+       oninput="formatGrade(this)">
+      <div class="small-note">1 සිට 11 දක්වා ඉලක්කම ඇතුළත් කරන්න.</div>
     </div>
-  </div>
 
-  <div class="field">
-    <label for="motherName">මවගේ නම *</label>
-    <div class="voice-row">
-      <input id="motherName" type="text" placeholder="මවගේ සම්පූර්ණ නම">
-      <button class="voice-button" type="button" onclick="startVoice('motherName')">🎤 හඬ</button>
+    <div class="field">
+      <label for="dob">උපන් දිනය *</label>
+      <input id="dob" type="text"
+       maxlength="10" placeholder="YYYY/MM/DD"
+       oninput="formatBirthDate(this)">
+      <div class="small-note">උදාහරණය: 2015/07/09</div>
     </div>
-  </div>
 
-  <div class="field">
-    <label for="address">ලිපිනය *</label>
-    <div class="voice-row">
-      <input id="address" type="text" placeholder="ස්ථිර ලිපිනය">
-      <button class="voice-button" type="button" onclick="startVoice('address')">🎤 හඬ</button>
+    <!-- දෙමාපිය තොරතුරු -->
+    <h3>දෙමාපිය තොරතුරු</h3>
+    <p class="small-note">දෙමාපියන්ගේ සහ සම්බන්ධ කරගත හැකි තොරතුරු ඇතුළත් කරන්න.</p>
+
+    <div class="field">
+      <label for="fatherName">පියාගේ නම *</label>
+      <div class="voice-row">
+        <input id="fatherName" type="text" placeholder="පියාගේ සම්පූර්ණ නම">
+        <button class="voice-button" type="button" onclick="startVoice('fatherName')">🎤 හඬ</button>
+      </div>
     </div>
+
+    <div class="field">
+      <label for="motherName">මවගේ නම *</label>
+      <div class="voice-row">
+        <input id="motherName" type="text" placeholder="මවගේ සම්පූර්ණ නම">
+        <button class="voice-button" type="button" onclick="startVoice('motherName')">🎤 හඬ</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="address">ලිපිනය *</label>
+      <div class="voice-row">
+        <input id="address" type="text" placeholder="ස්ථිර ලිපිනය">
+        <button class="voice-button" type="button" onclick="startVoice('address')">🎤 හඬ</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="phone">WhatsApp දුරකථන අංකය</label>
+      <input id="phone" type="tel"
+       inputmode="numeric"
+       maxlength="12"
+       placeholder="000 000 0000"
+       oninput="formatPhone(this)">
+      <div class="small-note">දුරකථන අංකය ඇතුළත් කිරීම අනිවාර්ය නොවේ.</div>
+    </div>
+
+    <button class="main-button" type="button" onclick="showReview()">
+      තොරතුරු පරීක්ෂා කරන්න
+    </button>
+
+    <p class="small-note">* ලකුණෙන් දක්වා ඇති තොරතුරු අනිවාර්ය වේ.</p>
+
   </div>
-
-  <div class="field">
-    <label for="phone">WhatsApp දුරකථන අංකය</label>
-    <input id="phone" type="tel"
-     inputmode="numeric"
-     maxlength="12"
-     placeholder="000 000 0000"
-     oninput="formatPhone(this)">
-    <div class="small-note">දුරකථන අංකය ඇතුළත් කිරීම අනිවාර්ය නොවේ.</div>
-  </div>
-
-  <button class="main-button" type="button" onclick="showReview()">
-    තොරතුරු පරීක්ෂා කරන්න
-  </button>
-
-  <p class="small-note">* ලකුණෙන් දක්වා ඇති තොරතුරු අනිවාර්ය වේ.</p>
-
-</div>
 
   <div id="reviewSection" class="hidden">
     <h3>ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
     <p class="small-note">පහත තොරතුරු නිවැරදිදැයි පරීක්ෂා කරන්න.</p>
 
     <div id="reviewDetails"></div>
-    
-<button class="secondary-button" type="button" onclick="editDetails()">
-  නැවත සංශෝධනය කරන්න
-</button>
-    <div class="security-box">
-      <div class="security-title">ආරක්ෂක පරීක්ෂාව</div>
-      <p class="small-note">
-        ඉල්ලීම පරීක්ෂා කිරීම සඳහා පෙර පහත Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.
-      </p>
 
-      <div id="turnstileWidget"></div>
-      <div id="turnstileMessage">
-        Cloudflare ආරක්ෂක පරීක්ෂාව සූදානම් වෙමින් පවතී...
-      </div>
-    </div>
-    
+    <button class="secondary-button" type="button" onclick="editDetails()">
+      නැවත සංශෝධනය කරන්න
+    </button>
+
     <button class="main-button" id="confirmButton" type="button"
             onclick="confirmRegistration()">
       තොරතුරු නිවැරදි බව සහතික කරමි
@@ -328,16 +291,10 @@ h3 {
   const SCRIPT_URL =
     "https://script.google.com/macros/s/AKfycbxuDQ3xQFvX3YflyoQ6VrTvvrjcpJVW-videRYIFA-2JCEq-ZBn3Bb7rFMpkjuO3BUKGQ/exec";
 
-  const TURNSTILE_SITE_KEY =
-    "0x4AAAAAAGQtTBjbJ_S1l1PF";
-
   let currentData = null;
   let pendingRequestId = null;
   let responseTimer = null;
   let recognition = null;
-
-  let turnstileWidgetId = null;
-  let turnstileToken = null;
 
   const fields = [
     ["fatherName", "පියාගේ නම"],
@@ -367,94 +324,6 @@ h3 {
 
   function hideError() {
     document.getElementById("errorMessage").style.display = "none";
-  }
-
-  function setTurnstileMessage(message) {
-    document.getElementById("turnstileMessage").textContent = message;
-  }
-
-  function setupTurnstile() {
-    if (!window.turnstile) {
-      setTurnstileMessage(
-        "ආරක්ෂක පරීක්ෂාව තවම සූදානම් නැත. මොහොතක් රැඳී සිටින්න."
-      );
-      return;
-    }
-
-    if (turnstileWidgetId !== null) {
-      return;
-    }
-
-    const reviewSection =
-      document.getElementById("reviewSection");
-
-    if (reviewSection.classList.contains("hidden")) {
-      return;
-    }
-
-    try {
-      turnstileWidgetId = window.turnstile.render(
-        "#turnstileWidget",
-        {
-          sitekey: TURNSTILE_SITE_KEY,
-
-          callback: function(token) {
-            turnstileToken = token;
-            setTurnstileMessage(
-              "ආරක්ෂක පරීක්ෂාව සාර්ථකයි. දැන් ඉල්ලීම පරීක්ෂා කළ හැකියි."
-            );
-          },
-
-          "expired-callback": function() {
-            turnstileToken = null;
-            setTurnstileMessage(
-              "ආරක්ෂක පරීක්ෂාව කල් ඉකුත් වී ඇත. නැවත පරීක්ෂා කරන්න."
-            );
-          },
-
-          "error-callback": function() {
-            turnstileToken = null;
-            setTurnstileMessage(
-              "ආරක්ෂක පරීක්ෂාවේ දෝෂයක් ඇති වුණා. පිටුව නැවත පරීක්ෂා කරන්න."
-            );
-          }
-        }
-      );
-
-      setTurnstileMessage(
-        "Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න."
-      );
-
-    } catch (error) {
-      turnstileWidgetId = null;
-      turnstileToken = null;
-
-      setTurnstileMessage(
-        "ආරක්ෂක පරීක්ෂාව ආරම්භ කළ නොහැක. පිටුව නැවත විවෘත කරන්න."
-      );
-    }
-  }
-
-  function onTurnstileLoad() {
-    setupTurnstile();
-  }
-
-  function resetTurnstile() {
-    turnstileToken = null;
-
-    if (window.turnstile && turnstileWidgetId !== null) {
-      try {
-        window.turnstile.reset(turnstileWidgetId);
-        setTurnstileMessage(
-          "ආරක්ෂක පරීක්ෂාව නැවත සම්පූර්ණ කරන්න."
-        );
-      } catch (error) {
-        turnstileWidgetId = null;
-        setTurnstileMessage(
-          "ආරක්ෂක පරීක්ෂාව නැවත ආරම්භ කරන්න."
-        );
-      }
-    }
   }
 
   function parseBirthDate(value) {
@@ -647,15 +516,11 @@ h3 {
     document.getElementById("entrySection").classList.add("hidden");
     document.getElementById("reviewSection").classList.remove("hidden");
 
-    setupTurnstile();
-
     document.getElementById("reviewSection")
       .scrollIntoView({behavior: "smooth"});
   }
 
   function editDetails() {
-    resetTurnstile();
-
     document.getElementById("reviewSection").classList.add("hidden");
     document.getElementById("entrySection").classList.remove("hidden");
 
@@ -664,12 +529,6 @@ h3 {
 
   function confirmRegistration() {
     if (!currentData || pendingRequestId) return;
-
-    if (!turnstileToken) {
-      alert("කරුණාකර Cloudflare ආරක්ෂක පරීක්ෂාව සම්පූර්ණ කරන්න.");
-      setupTurnstile();
-      return;
-    }
 
     if (!confirm("ඔබ ඇතුළත් කළ තොරතුරු නිවැරදි බව සහතික කර පරීක්ෂණ ඉල්ලීම ඉදිරිපත් කරනවාද?")) {
       return;
@@ -693,8 +552,7 @@ h3 {
       school: currentData.school,
       grade: currentData.grade,
       dob: currentData.isoDob,
-      requestId: pendingRequestId,
-      turnstileToken: turnstileToken
+      requestId: pendingRequestId
     };
 
     document.getElementById("payload").value =
@@ -707,8 +565,6 @@ h3 {
         pendingRequestId = null;
         button.disabled = false;
         button.textContent = "තොරතුරු නිවැරදි බව සහතික කරමි";
-
-        resetTurnstile();
 
         alert(
           "පද්ධතියෙන් පිළිතුරක් ලැබීමට ප්‍රමාදයි. " +
@@ -749,7 +605,6 @@ h3 {
       document.getElementById("resultButton").textContent =
         "නැවත පෝරමයට යන්න";
 
-      turnstileToken = null;
       return;
     }
 
@@ -765,8 +620,6 @@ h3 {
         "තවත් දරුවෙකු ලියාපදිංචි කරන්න";
 
     } else {
-      resetTurnstile();
-
       document.getElementById("reviewSection").classList.remove("hidden");
 
       alert(event.data.message || "තොරතුරු පරීක්ෂා කිරීමේදී දෝෂයක් ඇති වුණා.");
@@ -779,17 +632,7 @@ h3 {
     });
 
     currentData = null;
-    turnstileToken = null;
     pendingRequestId = null;
-
-    if (window.turnstile && turnstileWidgetId !== null) {
-      try {
-        window.turnstile.remove(turnstileWidgetId);
-      } catch (error) {}
-    }
-
-    turnstileWidgetId = null;
-    document.getElementById("turnstileWidget").replaceChildren();
 
     document.getElementById("resultSection").classList.add("hidden");
     document.getElementById("reviewSection").classList.add("hidden");
@@ -820,11 +663,6 @@ h3 {
   function formatGrade(input) {
     input.value = input.value.replace(/\D/g, "").slice(0, 2);
   }
-</script>
-
-<script
-  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"
-  async defer>
 </script>
 
 </body>
