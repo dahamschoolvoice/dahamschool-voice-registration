@@ -180,85 +180,95 @@
   <h1>ශ්‍රී බෝධිරාජ දහම් පාසල</h1>
   <div class="subtitle">ශිෂ්‍ය ලියාපදිංචි කිරීමේ පද්ධතිය</div>
 
-  <div id="entrySection">
+  ```html
+<div id="entrySection">
 
-    <div class="message error" id="errorMessage"></div>
-    <div class="message info" id="voiceMessage" style="display:none"></div>
+  <div class="message error" id="errorMessage"></div>
+  <div class="message info" id="voiceMessage" style="display:none"></div>
 
-    <div class="field">
-      <label for="fatherName">පියාගේ නම *</label>
-      <div class="voice-row">
-        <input id="fatherName" type="text" placeholder="පියාගේ සම්පූර්ණ නම">
-        <button class="voice-button" type="button" onclick="startVoice('fatherName')">🎤 හඬ</button>
-      </div>
+  <!-- දරුවාගේ තොරතුරු -->
+  <h3>දරුවාගේ තොරතුරු</h3>
+  <p class="small-note">දරුවාගේ පාසල සහ දහම් පාසල් තොරතුරු ඇතුළත් කරන්න.</p>
+
+  <div class="field">
+    <label for="childName">දරුවාගේ සම්පූර්ණ නම *</label>
+    <div class="voice-row">
+      <input id="childName" type="text" placeholder="දරුවාගේ සම්පූර්ණ නම">
+      <button class="voice-button" type="button" onclick="startVoice('childName')">🎤 හඬ</button>
     </div>
-
-    <div class="field">
-      <label for="motherName">මවගේ නම *</label>
-      <div class="voice-row">
-        <input id="motherName" type="text" placeholder="මවගේ සම්පූර්ණ නම">
-        <button class="voice-button" type="button" onclick="startVoice('motherName')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="address">ලිපිනය *</label>
-      <div class="voice-row">
-        <input id="address" type="text" placeholder="ස්ථිර ලිපිනය">
-        <button class="voice-button" type="button" onclick="startVoice('address')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="phone">WhatsApp දුරකථන අංකය</label>
-      <input id="phone" type="tel"
-       inputmode="numeric"
-       maxlength="12"
-       placeholder="000 000 0000"
-       oninput="formatPhone(this)">
-      <div class="small-note">දුරකථන අංකය ඇතුළත් කිරීම අනිවාර්ය නොවේ.</div>
-    </div>
-
-    <div class="field">
-      <label for="childName">දරුවාගේ සම්පූර්ණ නම *</label>
-      <div class="voice-row">
-        <input id="childName" type="text" placeholder="දරුවාගේ සම්පූර්ණ නම">
-        <button class="voice-button" type="button" onclick="startVoice('childName')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="school">ඉගෙනුම ලබන පාසල *</label>
-      <div class="voice-row">
-        <input id="school" type="text" placeholder="පාසලේ නම">
-        <button class="voice-button" type="button" onclick="startVoice('school')">🎤 හඬ</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
-      <input id="grade" type="text"
-       inputmode="numeric"
-       maxlength="2"
-       placeholder="1 සිට 11 දක්වා ශ්‍රේණිය"
-       oninput="formatGrade(this)">
-      <div class="small-note">1 සිට 11 දක්වා ඉලක්කම ඇතුළත් කරන්න.</div>
-    </div>
-
-    <div class="field">
-      <label for="dob">උපන් දිනය *</label>
-      <input id="dob" type="text"
-       maxlength="10" placeholder="YYYY/MM/DD"
-       oninput="formatBirthDate(this)">
-      <div class="small-note">උදාහරණය: 2015/07/09</div>
-    </div>
-
-    <button class="main-button" type="button" onclick="showReview()">
-      තොරතුරු පරීක්ෂා කරන්න
-    </button>
-
-    <p class="small-note">* ලකුණෙන් දක්වා ඇති තොරතුරු අනිවාර්ය වේ.</p>
   </div>
+
+  <div class="field">
+    <label for="school">ඉගෙනුම ලබන පාසල *</label>
+    <div class="voice-row">
+      <input id="school" type="text" placeholder="පාසලේ නම">
+      <button class="voice-button" type="button" onclick="startVoice('school')">🎤 හඬ</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="grade">දහම් පාසල් ශ්‍රේණිය *</label>
+    <input id="grade" type="text"
+     inputmode="numeric"
+     maxlength="2"
+     placeholder="1 සිට 11 දක්වා ශ්‍රේණිය"
+     oninput="formatGrade(this)">
+    <div class="small-note">1 සිට 11 දක්වා ඉලක්කම ඇතුළත් කරන්න.</div>
+  </div>
+
+  <div class="field">
+    <label for="dob">උපන් දිනය *</label>
+    <input id="dob" type="text"
+     maxlength="10" placeholder="YYYY/MM/DD"
+     oninput="formatBirthDate(this)">
+    <div class="small-note">උදාහරණය: 2015/07/09</div>
+  </div>
+
+  <!-- දෙමාපිය තොරතුරු -->
+  <h3>දෙමාපිය තොරතුරු</h3>
+  <p class="small-note">දෙමාපියන්ගේ සහ සම්බන්ධ කරගත හැකි තොරතුරු ඇතුළත් කරන්න.</p>
+
+  <div class="field">
+    <label for="fatherName">පියාගේ නම *</label>
+    <div class="voice-row">
+      <input id="fatherName" type="text" placeholder="පියාගේ සම්පූර්ණ නම">
+      <button class="voice-button" type="button" onclick="startVoice('fatherName')">🎤 හඬ</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="motherName">මවගේ නම *</label>
+    <div class="voice-row">
+      <input id="motherName" type="text" placeholder="මවගේ සම්පූර්ණ නම">
+      <button class="voice-button" type="button" onclick="startVoice('motherName')">🎤 හඬ</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="address">ලිපිනය *</label>
+    <div class="voice-row">
+      <input id="address" type="text" placeholder="ස්ථිර ලිපිනය">
+      <button class="voice-button" type="button" onclick="startVoice('address')">🎤 හඬ</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="phone">WhatsApp දුරකථන අංකය</label>
+    <input id="phone" type="tel"
+     inputmode="numeric"
+     maxlength="12"
+     placeholder="000 000 0000"
+     oninput="formatPhone(this)">
+    <div class="small-note">දුරකථන අංකය ඇතුළත් කිරීම අනිවාර්ය නොවේ.</div>
+  </div>
+
+  <button class="main-button" type="button" onclick="showReview()">
+    තොරතුරු පරීක්ෂා කරන්න
+  </button>
+
+  <p class="small-note">* ලකුණෙන් දක්වා ඇති තොරතුරු අනිවාර්ය වේ.</p>
+
+</div>
 
   <div id="reviewSection" class="hidden">
     <h3>ඇතුළත් කළ තොරතුරු පරීක්ෂා කරන්න</h3>
